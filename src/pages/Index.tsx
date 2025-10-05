@@ -3,10 +3,15 @@ import {
   Plus, TrendingUp, DollarSign, Package, Bell, BarChart3, 
   Home, Moon, Sun, Monitor, ChevronRight, 
   ArrowUp, ArrowDown, Target,
-  ShoppingBag, Download, X, Check, Menu
+  ShoppingBag, Download, X, Check, Menu, User, HelpCircle, Settings as SettingsIcon
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import Profile from '@/components/Profile';
+import Settings from '@/components/Settings';
+import Products from '@/components/Products';
+import Notifications from '@/components/Notifications';
+import Help from '@/components/Help';
 
 interface Product {
   id: number;
@@ -43,6 +48,7 @@ const Index = () => {
   const [showThemeMenu, setShowThemeMenu] = useState(false);
   const [showNewSaleModal, setShowNewSaleModal] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const [currentPage, setCurrentPage] = useState<'dashboard' | 'profile' | 'settings' | 'products' | 'notifications' | 'help'>('dashboard');
 
   const [products] = useState<Product[]>([
     { id: 1, name: 'Sorvete Chocolate', cost: 2.50, price: 5.00, category: 'Sorvetes', active: true },
@@ -499,6 +505,26 @@ const Index = () => {
     return <OnboardingScreen />;
   }
 
+  if (currentPage === 'profile') {
+    return <Profile theme={activeTheme} onClose={() => setCurrentPage('dashboard')} />;
+  }
+
+  if (currentPage === 'settings') {
+    return <Settings theme={activeTheme} onClose={() => setCurrentPage('dashboard')} />;
+  }
+
+  if (currentPage === 'products') {
+    return <Products theme={activeTheme} onClose={() => setCurrentPage('dashboard')} />;
+  }
+
+  if (currentPage === 'notifications') {
+    return <Notifications theme={activeTheme} onClose={() => setCurrentPage('dashboard')} />;
+  }
+
+  if (currentPage === 'help') {
+    return <Help theme={activeTheme} onClose={() => setCurrentPage('dashboard')} />;
+  }
+
   return (
     <div className="min-h-screen bg-background transition-colors duration-200">
       <div className="bg-card shadow-sm border-b border-border sticky top-0 z-40 backdrop-blur-lg bg-opacity-95">
@@ -538,9 +564,19 @@ const Index = () => {
                 {showThemeMenu && <ThemeSelector />}
               </div>
 
-              <button className="p-2 rounded-2xl hover:bg-secondary/50 transition-colors relative">
+              <button 
+                onClick={() => setCurrentPage('notifications')}
+                className="p-2 rounded-2xl hover:bg-secondary/50 transition-colors relative"
+              >
                 <Bell className="w-5 h-5 text-muted-foreground" />
                 <span className="absolute top-1 right-1 w-2 h-2 bg-destructive rounded-full"></span>
+              </button>
+
+              <button
+                onClick={() => setCurrentPage('profile')}
+                className="w-10 h-10 rounded-full overflow-hidden border-2 border-border hover:border-primary transition-colors"
+              >
+                <User className="w-full h-full p-2 text-muted-foreground" />
               </button>
             </div>
           </div>
@@ -553,19 +589,19 @@ const Index = () => {
             <Card className="shadow-lg p-4">
               <nav className="space-y-2">
                 {[
-                  { id: 'dashboard', name: 'Dashboard', icon: Home },
-                  { id: 'products', name: 'Produtos', icon: Package },
-                  { id: 'sales', name: 'Vendas', icon: TrendingUp },
-                  { id: 'reports', name: 'Relatórios', icon: BarChart3 },
+                  { id: 'dashboard', name: 'Dashboard', icon: Home, action: () => setCurrentPage('dashboard') },
+                  { id: 'products', name: 'Produtos', icon: Package, action: () => setCurrentPage('products') },
+                  { id: 'sales', name: 'Vendas', icon: TrendingUp, action: () => setActiveTab('sales') },
+                  { id: 'reports', name: 'Relatórios', icon: BarChart3, action: () => setActiveTab('reports') },
                 ].map((item) => (
                   <button
                     key={item.id}
                     onClick={() => {
-                      setActiveTab(item.id);
+                      item.action();
                       setShowMobileMenu(false);
                     }}
                     className={`w-full flex items-center px-4 py-3 text-left rounded-2xl transition-all ${
-                      activeTab === item.id 
+                      (item.id === 'dashboard' && currentPage === 'dashboard') || activeTab === item.id
                         ? 'bg-gradient-to-r from-primary to-accent text-white shadow-lg' 
                         : 'text-foreground hover:bg-secondary/50'
                     }`}
@@ -574,13 +610,33 @@ const Index = () => {
                     {item.name}
                   </button>
                 ))}
+                <div className="my-4 border-t border-border" />
+                <button
+                  onClick={() => {
+                    setCurrentPage('settings');
+                    setShowMobileMenu(false);
+                  }}
+                  className="w-full flex items-center px-4 py-3 text-left rounded-2xl transition-all text-foreground hover:bg-secondary/50"
+                >
+                  <SettingsIcon className="w-5 h-5 mr-3" />
+                  Configurações
+                </button>
+                <button
+                  onClick={() => {
+                    setCurrentPage('help');
+                    setShowMobileMenu(false);
+                  }}
+                  className="w-full flex items-center px-4 py-3 text-left rounded-2xl transition-all text-foreground hover:bg-secondary/50"
+                >
+                  <HelpCircle className="w-5 h-5 mr-3" />
+                  Ajuda
+                </button>
               </nav>
             </Card>
           </div>
 
           <div className="flex-1 min-w-0">
             {activeTab === 'dashboard' && <Dashboard />}
-            {activeTab === 'products' && <Products />}
             {activeTab === 'sales' && <Dashboard />}
             {activeTab === 'reports' && <Dashboard />}
           </div>
