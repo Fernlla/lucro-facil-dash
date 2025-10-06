@@ -12,6 +12,7 @@ import Settings from '@/components/Settings';
 import ProductsList from '@/components/ProductsList';
 import Notifications from '@/components/Notifications';
 import Help from '@/components/Help';
+import Auth from './Auth';
 
 interface Product {
   id: number;
@@ -48,7 +49,7 @@ const Index = () => {
   const [showThemeMenu, setShowThemeMenu] = useState(false);
   const [showNewSaleModal, setShowNewSaleModal] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
-  const [currentPage, setCurrentPage] = useState<'dashboard' | 'profile' | 'settings' | 'products' | 'notifications' | 'help'>('dashboard');
+  const [currentPage, setCurrentPage] = useState<'dashboard' | 'profile' | 'settings' | 'products' | 'notifications' | 'help' | 'auth'>('dashboard');
 
   const [products] = useState<Product[]>([
     { id: 1, name: 'Sorvete Chocolate', cost: 2.50, price: 5.00, category: 'Sorvetes', active: true },
@@ -525,6 +526,10 @@ const Index = () => {
     return <Help theme={activeTheme} onClose={() => setCurrentPage('dashboard')} />;
   }
 
+  if (currentPage === 'auth') {
+    return <Auth theme={activeTheme} onBack={() => setCurrentPage('dashboard')} />;
+  }
+
   return (
     <div className="min-h-screen bg-background transition-colors duration-200">
       <div className="bg-card shadow-sm border-b border-border sticky top-0 z-40 backdrop-blur-lg bg-opacity-95">
@@ -570,6 +575,13 @@ const Index = () => {
               >
                 <Bell className="w-5 h-5 text-muted-foreground" />
                 <span className="absolute top-1 right-1 w-2 h-2 bg-destructive rounded-full"></span>
+              </button>
+
+              <button
+                onClick={() => setCurrentPage('auth')}
+                className="hidden md:flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-primary to-accent text-white rounded-xl hover:shadow-lg transition-all font-medium"
+              >
+                Entrar
               </button>
 
               <button
