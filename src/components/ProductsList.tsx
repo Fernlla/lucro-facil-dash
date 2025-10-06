@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { Package, Plus, Edit, Trash2, TrendingUp, DollarSign } from 'lucide-react';
 
-interface ProductsProps {
+interface ProductsListProps {
   theme: 'light' | 'dark';
   onClose: () => void;
 }
 
-const Products: React.FC<ProductsProps> = ({ theme, onClose }) => {
+const ProductsList: React.FC<ProductsListProps> = ({ theme, onClose }) => {
   const isDark = theme === 'dark';
   const [showModal, setShowModal] = useState(false);
 
@@ -235,4 +235,4 @@ const Products: React.FC<ProductsProps> = ({ theme, onClose }) => {
   );
 };
 
-export default Products;
+export default ProductsList;

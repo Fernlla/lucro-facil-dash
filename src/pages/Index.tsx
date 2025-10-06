@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import Profile from '@/components/Profile';
 import Settings from '@/components/Settings';
-import Products from '@/components/Products';
+import ProductsList from '@/components/ProductsList';
 import Notifications from '@/components/Notifications';
 import Help from '@/components/Help';
 
@@ -514,7 +514,7 @@ const Index = () => {
   }
 
   if (currentPage === 'products') {
-    return <Products theme={activeTheme} onClose={() => setCurrentPage('dashboard')} />;
+    return <ProductsList theme={activeTheme} onClose={() => setCurrentPage('dashboard')} />;
   }
 
   if (currentPage === 'notifications') {
