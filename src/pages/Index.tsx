@@ -3,7 +3,7 @@ import {
   Plus, TrendingUp, DollarSign, Package, Bell, BarChart3, 
   Home, Moon, Sun, Monitor, ChevronRight, 
   ArrowUp, ArrowDown, Target,
-  ShoppingBag, Download, X, Check, Menu, User, HelpCircle, Settings as SettingsIcon
+  ShoppingBag, Download, X, Check, Menu, User, HelpCircle, Settings as SettingsIcon, Bot
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -13,6 +13,7 @@ import ProductsList from '@/components/ProductsList';
 import Notifications from '@/components/Notifications';
 import Help from '@/components/Help';
 import Auth from './Auth';
+import Assistant from '@/components/Assistant';
 
 interface Product {
   id: number;
@@ -49,7 +50,8 @@ const Index = () => {
   const [showThemeMenu, setShowThemeMenu] = useState(false);
   const [showNewSaleModal, setShowNewSaleModal] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
-  const [currentPage, setCurrentPage] = useState<'dashboard' | 'profile' | 'settings' | 'products' | 'notifications' | 'help' | 'auth'>('dashboard');
+  type PageType = 'dashboard' | 'profile' | 'settings' | 'products' | 'notifications' | 'help' | 'auth' | 'assistant';
+  const [currentPage, setCurrentPage] = useState<PageType>('dashboard');
 
   const [products] = useState<Product[]>([
     { id: 1, name: 'Sorvete Chocolate', cost: 2.50, price: 5.00, category: 'Sorvetes', active: true },
@@ -530,6 +532,10 @@ const Index = () => {
     return <Auth theme={activeTheme} onBack={() => setCurrentPage('dashboard')} />;
   }
 
+  if (currentPage === 'assistant') {
+    return <Assistant theme={activeTheme} onClose={() => setCurrentPage('dashboard')} />;
+  }
+
   return (
     <div className="min-h-screen bg-background transition-colors duration-200">
       <div className="bg-card shadow-sm border-b border-border sticky top-0 z-40 backdrop-blur-lg bg-opacity-95">
@@ -623,6 +629,20 @@ const Index = () => {
                   </button>
                 ))}
                 <div className="my-4 border-t border-border" />
+                <button
+                  onClick={() => {
+                    setCurrentPage('assistant' as PageType);
+                    setShowMobileMenu(false);
+                  }}
+                  className={`w-full flex items-center px-4 py-3 text-left rounded-2xl transition-all ${
+                    currentPage === ('assistant' as PageType)
+                      ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg' 
+                      : 'text-foreground hover:bg-secondary/50'
+                  }`}
+                >
+                  <Bot className="w-5 h-5 mr-3" />
+                  Assistente IA
+                </button>
                 <button
                   onClick={() => {
                     setCurrentPage('settings');
