@@ -3,13 +3,16 @@ import { Mail, Lock, User, ArrowRight, Eye, EyeOff, ArrowLeft } from 'lucide-rea
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function AuthPage() {
   const navigate = useNavigate();
+  const { login, signup } = useAuth();
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -31,19 +34,23 @@ export default function AuthPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError('');
     setIsLoading(true);
     
     try {
-      // Simular delay de autenticação
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // TODO: Implementar lógica real de autenticação com Supabase
-      console.log('Form submitted:', formData);
+      if (isLogin) {
+        await login(formData.email, formData.password);
+      } else {
+        if (!formData.name) {
+          throw new Error('Por favor, preencha seu nome');
+        }
+        await signup(formData.name, formData.email, formData.password);
+      }
       
       // Redirecionar para o app após login/cadastro
       navigate('/app');
-    } catch (error) {
-      console.error('Erro na autenticação:', error);
+    } catch (err: any) {
+      setError(err.message || 'Erro ao autenticar. Tente novamente.');
     } finally {
       setIsLoading(false);
     }
@@ -69,6 +76,13 @@ export default function AuthPage() {
         <Card className={`shadow-xl ${isDark ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-200'}`}>
           <div className="p-8">
             <form onSubmit={handleSubmit} className="space-y-4">
+              {/* Error Message */}
+              {error && (
+                <div className="bg-red-500/10 border border-red-500/50 rounded-xl p-3 text-sm text-red-600">
+                  {error}
+                </div>
+              )}
+              
               {/* Name Field (only for signup) */}
               {!isLogin && (
                 <div>

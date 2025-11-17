@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Mail, Lock, User, ArrowRight, Eye, EyeOff } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface AuthProps {
   theme: 'light' | 'dark';
@@ -8,18 +9,38 @@ interface AuthProps {
 
 export default function Auth({ theme, onBack }: AuthProps) {
   const isDark = theme === 'dark';
+  const { login, signup } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     password: ''
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implementar lógica de autenticação
-    console.log('Form submitted:', formData);
+    setError('');
+    setIsLoading(true);
+    
+    try {
+      if (isLogin) {
+        await login(formData.email, formData.password);
+      } else {
+        if (!formData.name) {
+          throw new Error('Por favor, preencha seu nome');
+        }
+        await signup(formData.name, formData.email, formData.password);
+      }
+      // Sucesso - o usuário será redirecionado automaticamente pelo Index
+      onBack();
+    } catch (err: any) {
+      setError(err.message || 'Erro ao autenticar. Tente novamente.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -41,6 +62,13 @@ export default function Auth({ theme, onBack }: AuthProps) {
         {/* Form Card */}
         <div className={`rounded-2xl p-8 shadow-lg ${isDark ? 'bg-slate-800 border border-slate-700' : 'bg-white border border-gray-200'}`}>
           <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Error Message */}
+            {error && (
+              <div className="bg-red-500/10 border border-red-500/50 rounded-xl p-3 text-sm text-red-600">
+                {error}
+              </div>
+            )}
+            
             {/* Name Field (only for signup) */}
             {!isLogin && (
               <div>
@@ -121,10 +149,20 @@ export default function Auth({ theme, onBack }: AuthProps) {
             {/* Submit Button */}
             <button
               type="submit"
-              className="w-full bg-gradient-to-r from-blue-600 to-blue-500 text-white py-3 rounded-xl font-semibold hover:from-blue-700 hover:to-blue-600 transition-all shadow-lg shadow-blue-500/30 flex items-center justify-center gap-2 group"
+              disabled={isLoading}
+              className="w-full bg-gradient-to-r from-blue-600 to-blue-500 text-white py-3 rounded-xl font-semibold hover:from-blue-700 hover:to-blue-600 transition-all shadow-lg shadow-blue-500/30 flex items-center justify-center gap-2 group disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isLogin ? 'Entrar' : 'Criar conta'}
-              <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+              {isLoading ? (
+                <>
+                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  {isLogin ? 'Entrando...' : 'Criando conta...'}
+                </>
+              ) : (
+                <>
+                  {isLogin ? 'Entrar' : 'Criar conta'}
+                  <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                </>
+              )}
             </button>
           </form>
 

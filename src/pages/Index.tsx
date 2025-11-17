@@ -3,7 +3,7 @@ import {
   Plus, TrendingUp, DollarSign, Package, Bell, BarChart3, 
   Home, Moon, Sun, Monitor, ChevronRight, 
   ArrowUp, ArrowDown, Target,
-  ShoppingBag, Download, X, Check, Menu, User, HelpCircle, Settings as SettingsIcon, Bot
+  ShoppingBag, Download, X, Check, Menu, User, HelpCircle, Settings as SettingsIcon, Bot, LogOut
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -15,6 +15,7 @@ import Notifications from '@/components/Notifications';
 import Help from '@/components/Help';
 import Auth from './Auth';
 import Assistant from '@/components/Assistant';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface Product {
   id: number;
@@ -43,6 +44,7 @@ interface NewSale {
 }
 
 const Index = () => {
+  const { user, isAuthenticated, logout } = useAuth();
   const [theme, setTheme] = useState<'light' | 'dark' | 'system'>('light');
   const [activeTheme, setActiveTheme] = useState<'light' | 'dark'>('light');
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -51,8 +53,17 @@ const Index = () => {
   const [showThemeMenu, setShowThemeMenu] = useState(false);
   const [showNewSaleModal, setShowNewSaleModal] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const [showUserMenu, setShowUserMenu] = useState(false);
   type PageType = 'dashboard' | 'profile' | 'settings' | 'products' | 'notifications' | 'help' | 'auth' | 'assistant';
   const [currentPage, setCurrentPage] = useState<PageType>('dashboard');
+  
+  const handleLogout = () => {
+    logout();
+    setIsOnboarded(false);
+    setBusinessType('');
+    setCurrentPage('auth');
+    setShowUserMenu(false);
+  };
 
   const [products] = useState<Product[]>([
     { id: 1, name: 'Sorvete Chocolate', cost: 2.50, price: 5.00, category: 'Sorvetes', active: true },
@@ -795,12 +806,55 @@ const Index = () => {
                 <span className="absolute -top-1 -right-1 h-3 w-3 bg-destructive rounded-full"></span>
               </button>
 
-              <button
-                onClick={() => setCurrentPage('profile')}
-                className="relative inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10 rounded-full"
-              >
-                <User className="h-4 w-4" />
-              </button>
+              <div className="relative">
+                <button
+                  onClick={() => setShowUserMenu(!showUserMenu)}
+                  className="relative inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10 rounded-full"
+                >
+                  {user?.avatar ? (
+                    <img src={user.avatar} alt={user.name} className="w-8 h-8 rounded-full" />
+                  ) : (
+                    <User className="h-4 w-4" />
+                  )}
+                </button>
+                {showUserMenu && (
+                  <div className="absolute right-0 mt-2 w-56 rounded-lg shadow-lg bg-popover border border-border overflow-hidden z-50">
+                    <div className="px-4 py-3 border-b border-border">
+                      <p className="text-sm font-medium">{user?.name || 'Usuário'}</p>
+                      <p className="text-xs text-muted-foreground truncate">{user?.email || ''}</p>
+                    </div>
+                    <button
+                      onClick={() => {
+                        setCurrentPage('profile');
+                        setShowUserMenu(false);
+                      }}
+                      className="w-full px-4 py-2 flex items-center gap-3 hover:bg-accent hover:text-accent-foreground transition-colors text-left"
+                    >
+                      <User className="h-4 w-4" />
+                      <span className="text-sm">Meu Perfil</span>
+                    </button>
+                    <button
+                      onClick={() => {
+                        setCurrentPage('settings');
+                        setShowUserMenu(false);
+                      }}
+                      className="w-full px-4 py-2 flex items-center gap-3 hover:bg-accent hover:text-accent-foreground transition-colors text-left"
+                    >
+                      <SettingsIcon className="h-4 w-4" />
+                      <span className="text-sm">Configurações</span>
+                    </button>
+                    <div className="border-t border-border">
+                      <button
+                        onClick={handleLogout}
+                        className="w-full px-4 py-2 flex items-center gap-3 hover:bg-destructive/10 hover:text-destructive transition-colors text-left text-destructive"
+                      >
+                        <LogOut className="h-4 w-4" />
+                        <span className="text-sm">Sair</span>
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
             </nav>
           </div>
         </div>

@@ -1,4 +1,6 @@
-import { User, Mail, Phone, Calendar, MapPin, Camera, Save } from 'lucide-react';
+import { useState } from 'react';
+import { User, Mail, Phone, Calendar, MapPin, Camera, Save, Check } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface ProfileProps {
   theme: 'light' | 'dark';
@@ -7,6 +9,25 @@ interface ProfileProps {
 
 export default function Profile({ theme, onClose }: ProfileProps) {
   const isDark = theme === 'dark';
+  const { user, updateProfile } = useAuth();
+  const [isSaving, setIsSaving] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [formData, setFormData] = useState({
+    name: user?.name || '',
+    email: user?.email || '',
+    phone: user?.phone || '',
+    dateOfBirth: user?.dateOfBirth || '',
+    address: user?.address || ''
+  });
+  
+  const handleSave = async () => {
+    setIsSaving(true);
+    await new Promise(resolve => setTimeout(resolve, 800));
+    updateProfile(formData);
+    setIsSaving(false);
+    setShowSuccess(true);
+    setTimeout(() => setShowSuccess(false), 3000);
+  };
 
   return (
     <div className={`min-h-screen ${isDark ? 'bg-slate-900' : 'bg-gray-50'} p-6`}>
@@ -31,7 +52,7 @@ export default function Profile({ theme, onClose }: ProfileProps) {
           <div className="flex flex-col items-center mb-8">
             <div className="relative">
               <img
-                src="https://api.dicebear.com/7.x/avataaars/svg?seed=Maria"
+                src={user?.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.name || 'User'}`}
                 alt="Avatar"
                 className="w-32 h-32 rounded-full border-4 border-blue-500"
               />
@@ -40,10 +61,10 @@ export default function Profile({ theme, onClose }: ProfileProps) {
               </button>
             </div>
             <h2 className={`mt-4 text-xl font-bold ${isDark ? 'text-slate-100' : 'text-gray-900'}`}>
-              Maria Silva
+              {user?.name || 'Usuário'}
             </h2>
             <p className={`text-sm ${isDark ? 'text-slate-400' : 'text-gray-600'}`}>
-              @mariasorvetes
+              {user?.email || ''}
             </p>
           </div>
 
@@ -58,7 +79,8 @@ export default function Profile({ theme, onClose }: ProfileProps) {
                 <User size={18} className={isDark ? 'text-slate-400' : 'text-gray-500'} />
                 <input
                   type="text"
-                  defaultValue="Maria Silva"
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   className={`flex-1 bg-transparent outline-none ${isDark ? 'text-slate-100' : 'text-gray-900'}`}
                 />
               </div>
@@ -74,8 +96,11 @@ export default function Profile({ theme, onClose }: ProfileProps) {
                 <Mail size={18} className={isDark ? 'text-slate-400' : 'text-gray-500'} />
                 <input
                   type="email"
-                  defaultValue="maria@exemplo.com"
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   className={`flex-1 bg-transparent outline-none ${isDark ? 'text-slate-100' : 'text-gray-900'}`}
+                  disabled
+                  title="E-mail não pode ser alterado"
                 />
               </div>
             </div>
@@ -90,7 +115,9 @@ export default function Profile({ theme, onClose }: ProfileProps) {
                 <Phone size={18} className={isDark ? 'text-slate-400' : 'text-gray-500'} />
                 <input
                   type="tel"
-                  defaultValue="(11) 98765-4321"
+                  value={formData.phone}
+                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                  placeholder="(00) 00000-0000"
                   className={`flex-1 bg-transparent outline-none ${isDark ? 'text-slate-100' : 'text-gray-900'}`}
                 />
               </div>
@@ -106,7 +133,8 @@ export default function Profile({ theme, onClose }: ProfileProps) {
                 <Calendar size={18} className={isDark ? 'text-slate-400' : 'text-gray-500'} />
                 <input
                   type="date"
-                  defaultValue="1990-05-15"
+                  value={formData.dateOfBirth}
+                  onChange={(e) => setFormData({ ...formData, dateOfBirth: e.target.value })}
                   className={`flex-1 bg-transparent outline-none ${isDark ? 'text-slate-100' : 'text-gray-900'}`}
                 />
               </div>
@@ -122,16 +150,40 @@ export default function Profile({ theme, onClose }: ProfileProps) {
                 <MapPin size={18} className={isDark ? 'text-slate-400' : 'text-gray-500'} />
                 <input
                   type="text"
-                  defaultValue="Rua das Flores, 123 - São Paulo, SP"
+                  value={formData.address}
+                  onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                  placeholder="Seu endereço completo"
                   className={`flex-1 bg-transparent outline-none ${isDark ? 'text-slate-100' : 'text-gray-900'}`}
                 />
               </div>
             </div>
           </div>
 
-          <button className="w-full mt-8 px-6 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-colors flex items-center justify-center gap-2">
-            <Save size={20} />
-            Salvar alterações
+          <button 
+            onClick={handleSave}
+            disabled={isSaving}
+            className={`w-full mt-8 px-6 py-3 rounded-xl font-semibold transition-colors flex items-center justify-center gap-2 disabled:opacity-50 ${
+              showSuccess 
+                ? 'bg-green-600 hover:bg-green-700' 
+                : 'bg-blue-600 hover:bg-blue-700'
+            } text-white`}
+          >
+            {isSaving ? (
+              <>
+                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                Salvando...
+              </>
+            ) : showSuccess ? (
+              <>
+                <Check size={20} />
+                Salvo com sucesso!
+              </>
+            ) : (
+              <>
+                <Save size={20} />
+                Salvar alterações
+              </>
+            )}
           </button>
         </div>
       </div>
