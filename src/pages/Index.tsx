@@ -15,6 +15,7 @@ import Notifications from '@/components/Notifications';
 import Help from '@/components/Help';
 import Auth from './Auth';
 import Assistant from '@/components/Assistant';
+import SalesPage from '@/components/SalesPage';
 import { useAuth } from '@/contexts/AuthContext';
 
 interface Product {
@@ -54,7 +55,7 @@ const Index = () => {
   const [showNewSaleModal, setShowNewSaleModal] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
-  type PageType = 'dashboard' | 'profile' | 'settings' | 'products' | 'notifications' | 'help' | 'auth' | 'assistant';
+  type PageType = 'dashboard' | 'profile' | 'settings' | 'products' | 'notifications' | 'help' | 'auth' | 'assistant' | 'sales';
   const [currentPage, setCurrentPage] = useState<PageType>('dashboard');
   
   const handleLogout = () => {
@@ -63,6 +64,10 @@ const Index = () => {
     setBusinessType('');
     setCurrentPage('auth');
     setShowUserMenu(false);
+  };
+
+  const handleDeleteSale = (id: number) => {
+    setSales(sales.filter(sale => sale.id !== id));
   };
 
   const [products] = useState<Product[]>([
@@ -519,6 +524,7 @@ const Index = () => {
         </Button>
 
         <Button 
+          onClick={() => setCurrentPage('products')}
           variant="outline" 
           className="h-20 flex-col space-y-2 hover:bg-primary hover:text-primary-foreground transition-colors"
         >
@@ -527,11 +533,12 @@ const Index = () => {
         </Button>
 
         <Button 
+          onClick={() => setCurrentPage('sales')}
           variant="outline" 
           className="h-20 flex-col space-y-2 hover:bg-primary hover:text-primary-foreground transition-colors"
         >
-          <BarChart3 className="h-5 w-5" />
-          <span className="text-sm font-medium">Análises</span>
+          <TrendingUp className="h-5 w-5" />
+          <span className="text-sm font-medium">Ver Vendas</span>
         </Button>
       </div>
 
@@ -642,7 +649,12 @@ const Index = () => {
         <div className="p-6">
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-lg font-semibold">Vendas Recentes</h3>
-            <Button variant="ghost" size="sm" className="text-primary hover:text-primary/80">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="text-primary hover:text-primary/80"
+              onClick={() => setCurrentPage('sales')}
+            >
               Ver todas
             </Button>
           </div>
@@ -754,6 +766,10 @@ const Index = () => {
 
   if (currentPage === 'assistant') {
     return <Assistant theme={activeTheme} onClose={() => setCurrentPage('dashboard')} />;
+  }
+
+  if (currentPage === 'sales') {
+    return <SalesPage theme={activeTheme} onClose={() => setCurrentPage('dashboard')} sales={sales} onDeleteSale={handleDeleteSale} />;
   }
 
   return (
@@ -870,7 +886,7 @@ const Index = () => {
                   {[
                     { id: 'dashboard', name: 'Dashboard', icon: Home, action: () => setCurrentPage('dashboard') },
                     { id: 'products', name: 'Produtos', icon: Package, action: () => setCurrentPage('products') },
-                    { id: 'sales', name: 'Vendas', icon: TrendingUp, action: () => setActiveTab('sales') },
+                    { id: 'sales', name: 'Vendas', icon: TrendingUp, action: () => setCurrentPage('sales') },
                     { id: 'reports', name: 'Relatórios', icon: BarChart3, action: () => setActiveTab('reports') },
                   ].map((item) => (
                     <button
@@ -880,7 +896,7 @@ const Index = () => {
                         setShowMobileMenu(false);
                       }}
                       className={`flex items-center gap-3 rounded-lg px-3 py-2 text-left text-sm transition-all hover:bg-accent hover:text-accent-foreground ${
-                        (item.id === 'dashboard' && currentPage === 'dashboard') || activeTab === item.id
+                        currentPage === item.id || (item.id === 'dashboard' && currentPage === 'dashboard') || activeTab === item.id
                           ? 'bg-accent text-accent-foreground' 
                           : 'text-muted-foreground'
                       }`}
@@ -987,7 +1003,7 @@ const Index = () => {
               {[
                 { id: 'dashboard', name: 'Dashboard', icon: Home, action: () => setCurrentPage('dashboard') },
                 { id: 'products', name: 'Produtos', icon: Package, action: () => setCurrentPage('products') },
-                { id: 'sales', name: 'Vendas', icon: TrendingUp, action: () => setActiveTab('sales') },
+                { id: 'sales', name: 'Vendas', icon: TrendingUp, action: () => setCurrentPage('sales') },
                 { id: 'reports', name: 'Relatórios', icon: BarChart3, action: () => setActiveTab('reports') },
               ].map((item) => (
                 <button
@@ -997,7 +1013,7 @@ const Index = () => {
                     setShowMobileMenu(false);
                   }}
                   className={`flex items-center gap-3 rounded-lg px-3 py-2 text-left text-sm transition-all hover:bg-accent hover:text-accent-foreground w-full ${
-                    (item.id === 'dashboard' && currentPage === 'dashboard') || activeTab === item.id
+                    currentPage === item.id || (item.id === 'dashboard' && currentPage === 'dashboard') || activeTab === item.id
                       ? 'bg-accent text-accent-foreground' 
                       : 'text-muted-foreground'
                   }`}
