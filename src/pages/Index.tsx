@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import Profile from '@/components/Profile';
 import Settings from '@/components/Settings';
 import ProductsList from '@/components/ProductsList';
@@ -57,13 +58,56 @@ const Index = () => {
     { id: 1, name: 'Sorvete Chocolate', cost: 2.50, price: 5.00, category: 'Sorvetes', active: true },
     { id: 2, name: 'Sorvete Morango', cost: 2.30, price: 5.00, category: 'Sorvetes', active: true },
     { id: 3, name: 'Picolé Frutas', cost: 1.80, price: 3.50, category: 'Picolés', active: true },
+    { id: 4, name: 'Sorvete Baunilha', cost: 2.40, price: 5.00, category: 'Sorvetes', active: true },
+    { id: 5, name: 'Picolé Chocolate', cost: 1.90, price: 3.50, category: 'Picolés', active: true },
+    { id: 6, name: 'Sorvete Creme', cost: 2.60, price: 5.50, category: 'Sorvetes', active: true },
+    { id: 7, name: 'Picolé Morango', cost: 1.70, price: 3.50, category: 'Picolés', active: true },
+    { id: 8, name: 'Açaí 300ml', cost: 4.50, price: 10.00, category: 'Açaí', active: true },
+    { id: 9, name: 'Açaí 500ml', cost: 7.00, price: 15.00, category: 'Açaí', active: true },
+    { id: 10, name: 'Milk-shake Chocolate', cost: 3.50, price: 8.00, category: 'Bebidas', active: true },
   ]);
 
-  const [sales, setSales] = useState<Sale[]>([
-    { id: 1, productId: 1, product: 'Sorvete Chocolate', quantity: 15, price: 5.00, cost: 2.50, date: new Date(), profit: 37.50 },
-    { id: 2, productId: 2, product: 'Sorvete Morango', quantity: 12, price: 5.00, cost: 2.30, date: new Date(), profit: 32.40 },
-    { id: 3, productId: 3, product: 'Picolé Frutas', quantity: 20, price: 3.50, cost: 1.80, date: new Date(), profit: 34.00 },
-  ]);
+  // Gerar vendas dos últimos 7 dias
+  const generateHistoricalSales = () => {
+    const sales: Sale[] = [];
+    const today = new Date();
+    let saleId = 1;
+    
+    for (let dayOffset = 6; dayOffset >= 0; dayOffset--) {
+      const date = new Date(today);
+      date.setDate(date.getDate() - dayOffset);
+      date.setHours(0, 0, 0, 0);
+      
+      // Vendas aleatórias por dia (entre 10-25 vendas)
+      const salesPerDay = Math.floor(Math.random() * 16) + 10;
+      
+      for (let i = 0; i < salesPerDay; i++) {
+        const randomProduct = products[Math.floor(Math.random() * products.length)];
+        const quantity = Math.floor(Math.random() * 5) + 1;
+        const salePrice = randomProduct.price;
+        const profit = quantity * (salePrice - randomProduct.cost);
+        
+        const saleDate = new Date(date);
+        saleDate.setHours(Math.floor(Math.random() * 12) + 8); // Entre 8h e 20h
+        saleDate.setMinutes(Math.floor(Math.random() * 60));
+        
+        sales.push({
+          id: saleId++,
+          productId: randomProduct.id,
+          product: randomProduct.name,
+          quantity,
+          price: salePrice,
+          cost: randomProduct.cost,
+          date: saleDate,
+          profit
+        });
+      }
+    }
+    
+    return sales.sort((a, b) => b.date.getTime() - a.date.getTime());
+  };
+
+  const [sales, setSales] = useState<Sale[]>(generateHistoricalSales());
 
   const [goals] = useState({ daily: 100, monthly: 3000 });
   const [newSale, setNewSale] = useState<NewSale>({ productId: '', quantity: 1, customPrice: '' });
@@ -168,7 +212,7 @@ const Index = () => {
   );
 
   const ThemeSelector = () => (
-    <div className="absolute right-0 mt-2 w-48 rounded-2xl shadow-lg bg-card border border-border overflow-hidden z-50">
+    <div className="absolute right-0 mt-2 w-48 rounded-lg shadow-lg bg-popover border border-border overflow-hidden z-50">
       {[
         { value: 'light' as const, icon: Sun, label: 'Claro' },
         { value: 'dark' as const, icon: Moon, label: 'Escuro' },
@@ -180,13 +224,13 @@ const Index = () => {
             setTheme(value);
             setShowThemeMenu(false);
           }}
-          className={`w-full px-4 py-3 flex items-center justify-between hover:bg-secondary/50 transition-colors ${
-            theme === value ? 'bg-secondary' : ''
+          className={`w-full px-4 py-3 flex items-center justify-between hover:bg-accent hover:text-accent-foreground transition-colors ${
+            theme === value ? 'bg-accent text-accent-foreground' : ''
           }`}
         >
           <div className="flex items-center">
-            <Icon className="w-4 h-4 mr-3 text-muted-foreground" />
-            <span className="text-sm text-foreground">{label}</span>
+            <Icon className="w-4 h-4 mr-3" />
+            <span className="text-sm">{label}</span>
           </div>
           {theme === value && <Check className="w-4 h-4 text-primary" />}
         </button>
@@ -296,158 +340,323 @@ const Index = () => {
     </div>
   );
 
+  // Preparar dados para gráficos
+  const prepareChartData = () => {
+    const dailyData: { [key: string]: { date: string, revenue: number, profit: number, sales: number } } = {};
+    const today = new Date();
+    
+    // Inicializar últimos 7 dias
+    for (let i = 6; i >= 0; i--) {
+      const date = new Date(today);
+      date.setDate(date.getDate() - i);
+      const dateKey = date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+      dailyData[dateKey] = { date: dateKey, revenue: 0, profit: 0, sales: 0 };
+    }
+    
+    // Agrupar vendas por dia
+    sales.forEach(sale => {
+      const dateKey = sale.date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+      if (dailyData[dateKey]) {
+        dailyData[dateKey].revenue += sale.quantity * sale.price;
+        dailyData[dateKey].profit += sale.profit;
+        dailyData[dateKey].sales += sale.quantity;
+      }
+    });
+    
+    return Object.values(dailyData);
+  };
+  
+  const prepareProductsData = () => {
+    const productSales: { [key: string]: { name: string, quantity: number, revenue: number } } = {};
+    
+    sales.forEach(sale => {
+      if (!productSales[sale.product]) {
+        productSales[sale.product] = { name: sale.product, quantity: 0, revenue: 0 };
+      }
+      productSales[sale.product].quantity += sale.quantity;
+      productSales[sale.product].revenue += sale.quantity * sale.price;
+    });
+    
+    return Object.values(productSales)
+      .sort((a, b) => b.quantity - a.quantity)
+      .slice(0, 5);
+  };
+
   const Dashboard = () => (
-    <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="bg-gradient-to-br from-primary to-accent text-white p-6 shadow-lg border-0">
-          <div className="flex justify-between items-start mb-4">
-            <div className="p-3 bg-white/20 rounded-2xl">
-              <TrendingUp className="w-6 h-6" />
+    <div className="space-y-8">
+      {/* Cards de métricas modernos */}
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <Card className="relative overflow-hidden">
+          <div className="flex h-32 flex-col justify-between p-6">
+            <div className="flex items-center justify-between space-y-0 pb-2">
+              <p className="text-sm font-medium text-muted-foreground">Faturamento</p>
+              <div className="h-4 w-4 text-muted-foreground">
+                <TrendingUp className="h-4 w-4" />
+              </div>
             </div>
-            <span className="text-xs bg-white/20 px-3 py-1 rounded-xl">Hoje</span>
-          </div>
-          <div className="space-y-1">
-            <p className="text-white/80 text-sm font-medium">Faturamento</p>
-            <p className="text-3xl font-bold">R$ {totalRevenue.toFixed(2)}</p>
-            <div className="flex items-center text-xs text-white/80">
-              <ArrowUp className="w-3 h-3 mr-1" />
-              <span>15% vs ontem</span>
+            <div>
+              <div className="text-2xl font-bold">R$ {totalRevenue.toFixed(2)}</div>
+              <p className="text-xs text-muted-foreground flex items-center">
+                <ArrowUp className="mr-1 h-3 w-3 text-green-600" />
+                <span className="text-green-600">+15%</span> vs ontem
+              </p>
             </div>
-          </div>
-        </Card>
-
-        <Card className="bg-gradient-to-br from-purple-500 to-purple-600 text-white p-6 shadow-lg border-0">
-          <div className="flex justify-between items-start mb-4">
-            <div className="p-3 bg-white/20 rounded-2xl">
-              <BarChart3 className="w-6 h-6" />
-            </div>
-            <span className="text-xs bg-white/20 px-3 py-1 rounded-xl">Hoje</span>
-          </div>
-          <div className="space-y-1">
-            <p className="text-white/80 text-sm font-medium">Custos</p>
-            <p className="text-3xl font-bold">R$ {totalCosts.toFixed(2)}</p>
-            <div className="flex items-center text-xs text-white/80">
-              <ArrowDown className="w-3 h-3 mr-1" />
-              <span>8% vs ontem</span>
-            </div>
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 pointer-events-none" />
           </div>
         </Card>
 
-        <Card className="bg-gradient-to-br from-success to-emerald-500 text-white p-6 shadow-lg border-0">
-          <div className="flex justify-between items-start mb-4">
-            <div className="p-3 bg-white/20 rounded-2xl">
-              <DollarSign className="w-6 h-6" />
+        <Card className="relative overflow-hidden">
+          <div className="flex h-32 flex-col justify-between p-6">
+            <div className="flex items-center justify-between space-y-0 pb-2">
+              <p className="text-sm font-medium text-muted-foreground">Custos</p>
+              <div className="h-4 w-4 text-muted-foreground">
+                <BarChart3 className="h-4 w-4" />
+              </div>
             </div>
-            <span className="text-xs bg-white/20 px-3 py-1 rounded-xl">Lucro</span>
-          </div>
-          <div className="space-y-1">
-            <p className="text-white/80 text-sm font-medium">Lucro Líquido</p>
-            <p className="text-3xl font-bold">R$ {totalProfit.toFixed(2)}</p>
-            <div className="flex items-center text-xs text-white/80">
-              <span>Margem {profitMargin.toFixed(1)}%</span>
+            <div>
+              <div className="text-2xl font-bold">R$ {totalCosts.toFixed(2)}</div>
+              <p className="text-xs text-muted-foreground flex items-center">
+                <ArrowDown className="mr-1 h-3 w-3 text-red-600" />
+                <span className="text-red-600">-8%</span> vs ontem
+              </p>
             </div>
+            <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-purple-600/5 pointer-events-none" />
           </div>
         </Card>
 
-        <Card className="bg-gradient-to-br from-warning to-amber-500 text-white p-6 shadow-lg border-0">
-          <div className="flex justify-between items-start mb-4">
-            <div className="p-3 bg-white/20 rounded-2xl">
-              <Target className="w-6 h-6" />
+        <Card className="relative overflow-hidden">
+          <div className="flex h-32 flex-col justify-between p-6">
+            <div className="flex items-center justify-between space-y-0 pb-2">
+              <p className="text-sm font-medium text-muted-foreground">Lucro Líquido</p>
+              <div className="h-4 w-4 text-muted-foreground">
+                <DollarSign className="h-4 w-4" />
+              </div>
             </div>
-            <span className="text-xs bg-white/20 px-3 py-1 rounded-xl">Meta</span>
+            <div>
+              <div className="text-2xl font-bold">R$ {totalProfit.toFixed(2)}</div>
+              <p className="text-xs text-muted-foreground">
+                Margem de {profitMargin.toFixed(1)}%
+              </p>
+            </div>
+            <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-emerald-500/5 pointer-events-none" />
           </div>
-          <div className="space-y-1">
-            <p className="text-white/80 text-sm font-medium">Progresso</p>
-            <p className="text-3xl font-bold">{dailyProgress.toFixed(0)}%</p>
-            <div className="flex items-center text-xs text-white/80">
-              <span>R$ {goals.daily.toFixed(2)}/dia</span>
+        </Card>
+
+        <Card className="relative overflow-hidden">
+          <div className="flex h-32 flex-col justify-between p-6">
+            <div className="flex items-center justify-between space-y-0 pb-2">
+              <p className="text-sm font-medium text-muted-foreground">Meta Diária</p>
+              <div className="h-4 w-4 text-muted-foreground">
+                <Target className="h-4 w-4" />
+              </div>
             </div>
+            <div>
+              <div className="text-2xl font-bold">{dailyProgress.toFixed(0)}%</div>
+              <p className="text-xs text-muted-foreground">
+                R$ {totalProfit.toFixed(2)} de R$ {goals.daily.toFixed(2)}
+              </p>
+            </div>
+            <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/5 to-amber-500/5 pointer-events-none" />
           </div>
         </Card>
       </div>
 
-      <Card className="p-6 shadow-lg">
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-semibold text-foreground">Meta Diária</h3>
-          <span className="text-sm text-muted-foreground">
-            R$ {totalProfit.toFixed(2)} de R$ {goals.daily.toFixed(2)}
-          </span>
-        </div>
-        
-        <div className="relative">
-          <div className="w-full h-3 bg-muted rounded-full overflow-hidden">
-            <div 
-              className="h-full bg-gradient-to-r from-success to-emerald-500 rounded-full transition-all duration-500 relative"
-              style={{ width: `${Math.min(dailyProgress, 100)}%` }}
-            >
-              <div className="absolute inset-0 bg-white/20 animate-pulse"></div>
-            </div>
+      {/* Barra de progresso da meta */}
+      <Card>
+        <div className="p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold">Progresso da Meta Diária</h3>
+            {dailyProgress >= 100 && (
+              <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full font-medium">
+                🎉 Meta batida!
+              </span>
+            )}
           </div>
           
-          {dailyProgress >= 100 && (
-            <div className="absolute -top-1 right-0 transform translate-x-1/2">
-              <span className="bg-success text-white text-xs px-2 py-1 rounded-xl shadow-lg">🎉 Meta batida!</span>
+          <div className="space-y-2">
+            <div className="flex justify-between text-sm text-muted-foreground">
+              <span>R$ {totalProfit.toFixed(2)}</span>
+              <span>R$ {goals.daily.toFixed(2)}</span>
             </div>
-          )}
+            <div className="w-full bg-secondary rounded-full h-2">
+              <div 
+                className="bg-gradient-to-r from-primary to-accent h-2 rounded-full transition-all duration-500 ease-out"
+                style={{ width: `${Math.min(dailyProgress, 100)}%` }}
+              />
+            </div>
+          </div>
         </div>
       </Card>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      {/* Grid de ações rápidas */}
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Button 
           onClick={() => setShowNewSaleModal(true)}
-          className="h-24 flex-col bg-gradient-to-br from-primary to-accent text-white hover:opacity-90"
+          variant="outline"
+          className="h-20 flex-col space-y-2 hover:bg-primary hover:text-primary-foreground transition-colors"
         >
-          <Plus className="w-8 h-8 mb-2" />
-          <span className="font-semibold">Nova Venda</span>
+          <Plus className="h-5 w-5" />
+          <span className="text-sm font-medium">Nova Venda</span>
         </Button>
 
-        <Button variant="outline" className="h-24 flex-col">
-          <Download className="w-8 h-8 mb-2" />
-          <span className="font-semibold">Relatório</span>
+        <Button 
+          variant="outline" 
+          className="h-20 flex-col space-y-2 hover:bg-primary hover:text-primary-foreground transition-colors"
+        >
+          <Download className="h-5 w-5" />
+          <span className="text-sm font-medium">Relatório</span>
         </Button>
 
-        <Button variant="outline" className="h-24 flex-col">
-          <Package className="w-8 h-8 mb-2" />
-          <span className="font-semibold">Produtos</span>
+        <Button 
+          variant="outline" 
+          className="h-20 flex-col space-y-2 hover:bg-primary hover:text-primary-foreground transition-colors"
+        >
+          <Package className="h-5 w-5" />
+          <span className="text-sm font-medium">Produtos</span>
         </Button>
 
-        <Button variant="outline" className="h-24 flex-col">
-          <BarChart3 className="w-8 h-8 mb-2" />
-          <span className="font-semibold">Análises</span>
+        <Button 
+          variant="outline" 
+          className="h-20 flex-col space-y-2 hover:bg-primary hover:text-primary-foreground transition-colors"
+        >
+          <BarChart3 className="h-5 w-5" />
+          <span className="text-sm font-medium">Análises</span>
         </Button>
       </div>
 
-      <Card className="p-6 shadow-lg">
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-semibold text-foreground">Vendas Recentes</h3>
-          <button className="text-sm text-primary hover:text-primary/80 font-medium">Ver todas</button>
-        </div>
-        
-        <div className="space-y-3">
-          {sales.slice(0, 5).map((sale) => (
-            <div key={sale.id} className="p-4 rounded-2xl border border-border hover:bg-secondary/50 transition-colors">
-              <div className="flex justify-between items-center">
-                <div className="flex items-center flex-1">
-                  <div className="p-3 bg-secondary rounded-2xl mr-4">
-                    <ShoppingBag className="w-5 h-5 text-primary" />
-                  </div>
-                  <div>
-                    <p className="font-medium text-foreground">{sale.product}</p>
-                    <div className="flex items-center text-sm text-muted-foreground mt-1">
-                      <span>{sale.quantity}x unidades</span>
-                      <span className="mx-2">•</span>
-                      <span>{sale.date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}</span>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="text-right">
-                  <p className="font-semibold text-foreground">R$ {(sale.quantity * sale.price).toFixed(2)}</p>
-                  <p className="text-sm text-success">+R$ {sale.profit.toFixed(2)}</p>
-                </div>
+      {/* Gráficos */}
+      <div className="grid gap-4 md:grid-cols-2">
+        <Card>
+          <div className="p-6">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h3 className="text-lg font-semibold">Faturamento e Lucro (7 dias)</h3>
+                <p className="text-sm text-muted-foreground">Evolução diária do seu negócio</p>
               </div>
             </div>
-          ))}
+            
+            <ResponsiveContainer width="100%" height={300}>
+              <LineChart data={prepareChartData()}>
+                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                <XAxis 
+                  dataKey="date" 
+                  stroke="hsl(var(--muted-foreground))"
+                  fontSize={12}
+                />
+                <YAxis 
+                  stroke="hsl(var(--muted-foreground))"
+                  fontSize={12}
+                  tickFormatter={(value) => `R$ ${value}`}
+                />
+                <Tooltip 
+                  contentStyle={{ 
+                    backgroundColor: 'hsl(var(--popover))', 
+                    border: '1px solid hsl(var(--border))',
+                    borderRadius: '8px'
+                  }}
+                  formatter={(value: number) => [`R$ ${value.toFixed(2)}`, '']}
+                />
+                <Legend />
+                <Line 
+                  type="monotone" 
+                  dataKey="revenue" 
+                  stroke="hsl(215 90% 55%)" 
+                  strokeWidth={2}
+                  name="Faturamento"
+                  dot={{ fill: 'hsl(215 90% 55%)', r: 4 }}
+                />
+                <Line 
+                  type="monotone" 
+                  dataKey="profit" 
+                  stroke="hsl(145 70% 50%)" 
+                  strokeWidth={2}
+                  name="Lucro"
+                  dot={{ fill: 'hsl(145 70% 50%)', r: 4 }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </Card>
+
+        <Card>
+          <div className="p-6">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h3 className="text-lg font-semibold">Top 5 Produtos</h3>
+                <p className="text-sm text-muted-foreground">Mais vendidos do período</p>
+              </div>
+            </div>
+            
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={prepareProductsData()}>
+                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                <XAxis 
+                  dataKey="name" 
+                  stroke="hsl(var(--muted-foreground))"
+                  fontSize={11}
+                  angle={-15}
+                  textAnchor="end"
+                  height={80}
+                />
+                <YAxis 
+                  stroke="hsl(var(--muted-foreground))"
+                  fontSize={12}
+                />
+                <Tooltip 
+                  contentStyle={{ 
+                    backgroundColor: 'hsl(var(--popover))', 
+                    border: '1px solid hsl(var(--border))',
+                    borderRadius: '8px'
+                  }}
+                  formatter={(value: number, name: string) => [
+                    name === 'quantity' ? `${value} un` : `R$ ${value.toFixed(2)}`,
+                    name === 'quantity' ? 'Quantidade' : 'Faturamento'
+                  ]}
+                />
+                <Legend />
+                <Bar 
+                  dataKey="quantity" 
+                  fill="hsl(215 90% 55%)" 
+                  name="Quantidade"
+                  radius={[8, 8, 0, 0]}
+                />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </Card>
+      </div>
+
+      {/* Vendas recentes */}
+      <Card>
+        <div className="p-6">
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-lg font-semibold">Vendas Recentes</h3>
+            <Button variant="ghost" size="sm" className="text-primary hover:text-primary/80">
+              Ver todas
+            </Button>
+          </div>
+          
+          <div className="space-y-4">
+            {sales.slice(0, 5).map((sale) => (
+              <div key={sale.id} className="flex items-center justify-between p-4 rounded-lg border border-border hover:bg-muted/50 transition-colors">
+                <div className="flex items-center space-x-4">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
+                    <ShoppingBag className="h-5 w-5 text-primary" />
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-sm font-medium leading-none">{sale.product}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {sale.quantity}x unidades • {sale.date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
+                    </p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <p className="text-sm font-medium">R$ {(sale.quantity * sale.price).toFixed(2)}</p>
+                  <p className="text-xs text-green-600">+R$ {sale.profit.toFixed(2)}</p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </Card>
     </div>
@@ -538,38 +747,41 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background transition-colors duration-200">
-      <div className="bg-card shadow-sm border-b border-border sticky top-0 z-40 backdrop-blur-lg bg-opacity-95">
-        <div className="max-w-7xl mx-auto px-4 py-4">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center">
-              <button
-                onClick={() => setShowMobileMenu(!showMobileMenu)}
-                className="md:hidden mr-3 p-2 rounded-2xl hover:bg-secondary/50"
-              >
-                <Menu className="w-5 h-5 text-foreground" />
-              </button>
-              
-              <div className="bg-gradient-to-r from-primary to-accent w-10 h-10 rounded-2xl flex items-center justify-center mr-3 shadow-lg">
-                <DollarSign className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <h1 className="text-xl font-bold text-foreground">LucroFácil</h1>
-                <p className="text-xs text-muted-foreground">Olá! 👋</p>
+      {/* Header moderno */}
+      <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="container flex h-14 max-w-screen-2xl items-center">
+          <div className="mr-4 hidden md:flex">
+            <div className="bg-gradient-to-r from-primary to-accent w-8 h-8 rounded-lg flex items-center justify-center mr-3 shadow-sm">
+              <DollarSign className="w-5 h-5 text-white" />
+            </div>
+            <span className="hidden font-bold sm:inline-block">LucroFácil</span>
+          </div>
+          
+          <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
+            <div className="w-full flex-1 md:w-auto md:flex-none">
+              <div className="flex items-center space-x-2">
+                <button
+                  onClick={() => setShowMobileMenu(!showMobileMenu)}
+                  className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2"
+                >
+                  <Menu className="h-4 w-4" />
+                  <span className="ml-2 hidden md:inline">Menu</span>
+                </button>
               </div>
             </div>
             
-            <div className="flex items-center gap-2">
+            <nav className="flex items-center space-x-2">
               <div className="relative">
                 <button 
                   onClick={() => setShowThemeMenu(!showThemeMenu)}
-                  className="p-2 rounded-2xl hover:bg-secondary/50 transition-colors"
+                  className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10"
                 >
                   {theme === 'dark' ? (
-                    <Moon className="w-5 h-5 text-muted-foreground" />
+                    <Moon className="h-4 w-4" />
                   ) : theme === 'light' ? (
-                    <Sun className="w-5 h-5 text-muted-foreground" />
+                    <Sun className="h-4 w-4" />
                   ) : (
-                    <Monitor className="w-5 h-5 text-muted-foreground" />
+                    <Monitor className="h-4 w-4" />
                   )}
                 </button>
                 {showThemeMenu && <ThemeSelector />}
@@ -577,103 +789,190 @@ const Index = () => {
 
               <button 
                 onClick={() => setCurrentPage('notifications')}
-                className="p-2 rounded-2xl hover:bg-secondary/50 transition-colors relative"
+                className="relative inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10"
               >
-                <Bell className="w-5 h-5 text-muted-foreground" />
-                <span className="absolute top-1 right-1 w-2 h-2 bg-destructive rounded-full"></span>
-              </button>
-
-              <button
-                onClick={() => setCurrentPage('auth')}
-                className="hidden md:flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-primary to-accent text-white rounded-xl hover:shadow-lg transition-all font-medium"
-              >
-                Entrar
+                <Bell className="h-4 w-4" />
+                <span className="absolute -top-1 -right-1 h-3 w-3 bg-destructive rounded-full"></span>
               </button>
 
               <button
                 onClick={() => setCurrentPage('profile')}
-                className="w-10 h-10 rounded-full overflow-hidden border-2 border-border hover:border-primary transition-colors"
+                className="relative inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10 rounded-full"
               >
-                <User className="w-full h-full p-2 text-muted-foreground" />
+                <User className="h-4 w-4" />
               </button>
-            </div>
+            </nav>
           </div>
         </div>
-      </div>
+      </header>
 
-      <div className="max-w-7xl mx-auto px-4 py-6">
-        <div className="flex gap-6">
-          <div className={`${showMobileMenu ? 'block' : 'hidden'} md:block w-64 flex-shrink-0`}>
-            <Card className="shadow-lg p-4">
-              <nav className="space-y-2">
-                {[
-                  { id: 'dashboard', name: 'Dashboard', icon: Home, action: () => setCurrentPage('dashboard') },
-                  { id: 'products', name: 'Produtos', icon: Package, action: () => setCurrentPage('products') },
-                  { id: 'sales', name: 'Vendas', icon: TrendingUp, action: () => setActiveTab('sales') },
-                  { id: 'reports', name: 'Relatórios', icon: BarChart3, action: () => setActiveTab('reports') },
-                ].map((item) => (
+      <div className="container grid grid-cols-1 md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr] max-w-screen-2xl">
+        {/* Sidebar moderna */}
+        <aside className="hidden md:flex flex-col border-r border-border/40 bg-card/50">
+          <div className="flex h-[calc(100vh-3.5rem)] flex-col gap-2">
+            <div className="flex-1 overflow-auto py-2">
+              <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
+                <div className="space-y-1">
+                  {[
+                    { id: 'dashboard', name: 'Dashboard', icon: Home, action: () => setCurrentPage('dashboard') },
+                    { id: 'products', name: 'Produtos', icon: Package, action: () => setCurrentPage('products') },
+                    { id: 'sales', name: 'Vendas', icon: TrendingUp, action: () => setActiveTab('sales') },
+                    { id: 'reports', name: 'Relatórios', icon: BarChart3, action: () => setActiveTab('reports') },
+                  ].map((item) => (
+                    <button
+                      key={item.id}
+                      onClick={() => {
+                        item.action();
+                        setShowMobileMenu(false);
+                      }}
+                      className={`flex items-center gap-3 rounded-lg px-3 py-2 text-left text-sm transition-all hover:bg-accent hover:text-accent-foreground ${
+                        (item.id === 'dashboard' && currentPage === 'dashboard') || activeTab === item.id
+                          ? 'bg-accent text-accent-foreground' 
+                          : 'text-muted-foreground'
+                      }`}
+                    >
+                      <item.icon className="h-4 w-4" />
+                      {item.name}
+                    </button>
+                  ))}
+                </div>
+                
+                <div className="mt-4 space-y-1">
+                  <div className="px-3 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                    Ferramentas
+                  </div>
                   <button
-                    key={item.id}
                     onClick={() => {
-                      item.action();
+                      setCurrentPage('assistant' as PageType);
                       setShowMobileMenu(false);
                     }}
-                    className={`w-full flex items-center px-4 py-3 text-left rounded-2xl transition-all ${
-                      (item.id === 'dashboard' && currentPage === 'dashboard') || activeTab === item.id
-                        ? 'bg-gradient-to-r from-primary to-accent text-white shadow-lg' 
-                        : 'text-foreground hover:bg-secondary/50'
+                    className={`flex items-center gap-3 rounded-lg px-3 py-2 text-left text-sm transition-all hover:bg-accent hover:text-accent-foreground ${
+                      currentPage === ('assistant' as PageType)
+                        ? 'bg-accent text-accent-foreground' 
+                        : 'text-muted-foreground'
                     }`}
                   >
-                    <item.icon className="w-5 h-5 mr-3" />
-                    {item.name}
+                    <Bot className="h-4 w-4" />
+                    Assistente IA
                   </button>
-                ))}
-                <div className="my-4 border-t border-border" />
-                <button
-                  onClick={() => {
-                    setCurrentPage('assistant' as PageType);
-                    setShowMobileMenu(false);
-                  }}
-                  className={`w-full flex items-center px-4 py-3 text-left rounded-2xl transition-all ${
-                    currentPage === ('assistant' as PageType)
-                      ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg' 
-                      : 'text-foreground hover:bg-secondary/50'
-                  }`}
-                >
-                  <Bot className="w-5 h-5 mr-3" />
-                  Assistente IA
-                </button>
-                <button
-                  onClick={() => {
-                    setCurrentPage('settings');
-                    setShowMobileMenu(false);
-                  }}
-                  className="w-full flex items-center px-4 py-3 text-left rounded-2xl transition-all text-foreground hover:bg-secondary/50"
-                >
-                  <SettingsIcon className="w-5 h-5 mr-3" />
-                  Configurações
-                </button>
-                <button
-                  onClick={() => {
-                    setCurrentPage('help');
-                    setShowMobileMenu(false);
-                  }}
-                  className="w-full flex items-center px-4 py-3 text-left rounded-2xl transition-all text-foreground hover:bg-secondary/50"
-                >
-                  <HelpCircle className="w-5 h-5 mr-3" />
-                  Ajuda
-                </button>
+                  <button
+                    onClick={() => {
+                      setCurrentPage('settings');
+                      setShowMobileMenu(false);
+                    }}
+                    className="flex items-center gap-3 rounded-lg px-3 py-2 text-left text-sm transition-all hover:bg-accent hover:text-accent-foreground text-muted-foreground"
+                  >
+                    <SettingsIcon className="h-4 w-4" />
+                    Configurações
+                  </button>
+                  <button
+                    onClick={() => {
+                      setCurrentPage('help');
+                      setShowMobileMenu(false);
+                    }}
+                    className="flex items-center gap-3 rounded-lg px-3 py-2 text-left text-sm transition-all hover:bg-accent hover:text-accent-foreground text-muted-foreground"
+                  >
+                    <HelpCircle className="h-4 w-4" />
+                    Ajuda
+                  </button>
+                </div>
               </nav>
-            </Card>
+            </div>
           </div>
+        </aside>
 
-          <div className="flex-1 min-w-0">
+        {/* Conteúdo principal */}
+        <main className="flex flex-1 flex-col gap-4 p-4 pt-6">
+          <div className="flex items-center justify-between">
+            <div className="grid gap-1">
+              <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
+              <p className="text-muted-foreground">
+                Acompanhe suas métricas e performance em tempo real
+              </p>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Button
+                onClick={() => setShowNewSaleModal(true)}
+                className="bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90"
+              >
+                <Plus className="mr-2 h-4 w-4" />
+                Nova Venda
+              </Button>
+            </div>
+          </div>
+          
+          <div className="flex-1">
             {activeTab === 'dashboard' && <Dashboard />}
             {activeTab === 'sales' && <Dashboard />}
             {activeTab === 'reports' && <Dashboard />}
           </div>
-        </div>
+        </main>
       </div>
+
+      {/* Mobile menu */}
+      {showMobileMenu && (
+        <div className="fixed inset-0 z-50 md:hidden">
+          <div className="fixed inset-0 bg-background/80 backdrop-blur-sm" onClick={() => setShowMobileMenu(false)} />
+          <div className="fixed left-0 top-0 h-full w-64 bg-background border-r border-border/40 p-4">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center space-x-2">
+                <div className="bg-gradient-to-r from-primary to-accent w-8 h-8 rounded-lg flex items-center justify-center">
+                  <DollarSign className="w-5 h-5 text-white" />
+                </div>
+                <span className="font-bold">LucroFácil</span>
+              </div>
+              <button
+                onClick={() => setShowMobileMenu(false)}
+                className="p-2 rounded-md hover:bg-accent"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+            
+            <nav className="space-y-2">
+              {[
+                { id: 'dashboard', name: 'Dashboard', icon: Home, action: () => setCurrentPage('dashboard') },
+                { id: 'products', name: 'Produtos', icon: Package, action: () => setCurrentPage('products') },
+                { id: 'sales', name: 'Vendas', icon: TrendingUp, action: () => setActiveTab('sales') },
+                { id: 'reports', name: 'Relatórios', icon: BarChart3, action: () => setActiveTab('reports') },
+              ].map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => {
+                    item.action();
+                    setShowMobileMenu(false);
+                  }}
+                  className={`flex items-center gap-3 rounded-lg px-3 py-2 text-left text-sm transition-all hover:bg-accent hover:text-accent-foreground w-full ${
+                    (item.id === 'dashboard' && currentPage === 'dashboard') || activeTab === item.id
+                      ? 'bg-accent text-accent-foreground' 
+                      : 'text-muted-foreground'
+                  }`}
+                >
+                  <item.icon className="h-4 w-4" />
+                  {item.name}
+                </button>
+              ))}
+              
+              <div className="my-4 border-t border-border" />
+              
+              <button
+                onClick={() => {
+                  setCurrentPage('assistant' as PageType);
+                  setShowMobileMenu(false);
+                }}
+                className={`flex items-center gap-3 rounded-lg px-3 py-2 text-left text-sm transition-all hover:bg-accent hover:text-accent-foreground w-full ${
+                  currentPage === ('assistant' as PageType)
+                    ? 'bg-accent text-accent-foreground' 
+                    : 'text-muted-foreground'
+                }`}
+              >
+                <Bot className="h-4 w-4" />
+                Assistente IA
+              </button>
+            </nav>
+          </div>
+        </div>
+      )}
 
       {showNewSaleModal && <NewSaleModal />}
 
