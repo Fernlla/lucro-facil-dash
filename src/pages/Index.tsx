@@ -49,8 +49,6 @@ const Index = () => {
   const [theme, setTheme] = useState<'light' | 'dark' | 'system'>('light');
   const [activeTheme, setActiveTheme] = useState<'light' | 'dark'>('light');
   const [activeTab, setActiveTab] = useState('dashboard');
-  const [businessType, setBusinessType] = useState('');
-  const [isOnboarded, setIsOnboarded] = useState(false);
   const [showThemeMenu, setShowThemeMenu] = useState(false);
   const [showNewSaleModal, setShowNewSaleModal] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
@@ -60,8 +58,6 @@ const Index = () => {
   
   const handleLogout = () => {
     logout();
-    setIsOnboarded(false);
-    setBusinessType('');
     setCurrentPage('auth');
     setShowUserMenu(false);
   };
@@ -149,17 +145,7 @@ const Index = () => {
   const profitMargin = totalRevenue > 0 ? (totalProfit / totalRevenue) * 100 : 0;
   const dailyProgress = Math.min((totalProfit / goals.daily) * 100, 100);
 
-  const businessTypes = [
-    { id: 'food', name: 'Alimentação', icon: '🍦', desc: 'Sorvetes, doces, salgados' },
-    { id: 'fashion', name: 'Confecção', icon: '👗', desc: 'Costura, bordados' },
-    { id: 'retail', name: 'Revenda', icon: '🛍️', desc: 'Cosméticos, roupas' },
-    { id: 'crafts', name: 'Artesanato', icon: '🎨', desc: 'Bijuterias, decoração' }
-  ];
 
-  const handleBusinessSelect = (type: string) => {
-    setBusinessType(type);
-    setIsOnboarded(true);
-  };
 
   const addSale = () => {
     if (!newSale.productId || !newSale.quantity) return;
@@ -186,46 +172,6 @@ const Index = () => {
     setNewSale({ productId: '', quantity: 1, customPrice: '' });
     setShowNewSaleModal(false);
   };
-
-  const OnboardingScreen = () => (
-    <div className="min-h-screen bg-gradient-to-br from-primary via-primary to-accent p-4">
-      <div className="max-w-md mx-auto pt-20">
-        <div className="text-center mb-8">
-          <div className="bg-white w-20 h-20 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-xl">
-            <DollarSign className="w-10 h-10 text-primary" />
-          </div>
-          <h1 className="text-4xl font-bold text-white mb-2">LucroFácil</h1>
-          <p className="text-white/90 text-lg">Descubra quanto você realmente lucra</p>
-        </div>
-
-        <Card className="p-6 mb-6 shadow-xl">
-          <h2 className="text-xl font-semibold mb-6 text-center text-foreground">Qual é o seu negócio?</h2>
-          <div className="space-y-4">
-            {businessTypes.map((type) => (
-              <button
-                key={type.id}
-                onClick={() => handleBusinessSelect(type.id)}
-                className="w-full p-5 border-2 border-border rounded-2xl hover:border-primary hover:bg-secondary/50 transition-all text-left group"
-              >
-                <div className="flex items-center">
-                  <div className="text-4xl mr-4 group-hover:scale-110 transition-transform">{type.icon}</div>
-                  <div className="flex-1">
-                    <div className="font-semibold text-foreground text-lg">{type.name}</div>
-                    <div className="text-sm text-muted-foreground">{type.desc}</div>
-                  </div>
-                  <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
-                </div>
-              </button>
-            ))}
-          </div>
-        </Card>
-
-        <div className="text-center text-sm text-white/80">
-          <p>🎯 Vamos personalizar sua experiência</p>
-        </div>
-      </div>
-    </div>
-  );
 
   const ThemeSelector = () => (
     <div className="absolute right-0 mt-2 w-48 rounded-lg shadow-lg bg-popover border border-border overflow-hidden z-50">
@@ -735,10 +681,6 @@ const Index = () => {
       </div>
     </div>
   );
-
-  if (!isOnboarded) {
-    return <OnboardingScreen />;
-  }
 
   if (currentPage === 'profile') {
     return <Profile theme={activeTheme} onClose={() => setCurrentPage('dashboard')} />;
