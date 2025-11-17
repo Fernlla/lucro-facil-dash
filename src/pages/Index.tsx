@@ -402,7 +402,7 @@ const Index = () => {
     <div className="space-y-8">
       {/* Cards de métricas modernos */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card className="relative overflow-hidden">
+        <Card className="relative overflow-hidden border-2 shadow-md hover:shadow-lg transition-shadow">
           <div className="flex h-32 flex-col justify-between p-6">
             <div className="flex items-center justify-between space-y-0 pb-2">
               <p className="text-sm font-medium text-muted-foreground">Faturamento</p>
@@ -421,7 +421,7 @@ const Index = () => {
           </div>
         </Card>
 
-        <Card className="relative overflow-hidden">
+        <Card className="relative overflow-hidden border-2 shadow-md hover:shadow-lg transition-shadow">
           <div className="flex h-32 flex-col justify-between p-6">
             <div className="flex items-center justify-between space-y-0 pb-2">
               <p className="text-sm font-medium text-muted-foreground">Custos</p>
@@ -440,7 +440,7 @@ const Index = () => {
           </div>
         </Card>
 
-        <Card className="relative overflow-hidden">
+        <Card className="relative overflow-hidden border-2 shadow-md hover:shadow-lg transition-shadow">
           <div className="flex h-32 flex-col justify-between p-6">
             <div className="flex items-center justify-between space-y-0 pb-2">
               <p className="text-sm font-medium text-muted-foreground">Lucro Líquido</p>
@@ -458,7 +458,7 @@ const Index = () => {
           </div>
         </Card>
 
-        <Card className="relative overflow-hidden">
+        <Card className="relative overflow-hidden border-2 shadow-md hover:shadow-lg transition-shadow">
           <div className="flex h-32 flex-col justify-between p-6">
             <div className="flex items-center justify-between space-y-0 pb-2">
               <p className="text-sm font-medium text-muted-foreground">Meta Diária</p>
@@ -478,7 +478,7 @@ const Index = () => {
       </div>
 
       {/* Barra de progresso da meta */}
-      <Card>
+      <Card className="border-2 shadow-md">
         <div className="p-6">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold">Progresso da Meta Diária</h3>
@@ -509,7 +509,7 @@ const Index = () => {
         <Button 
           onClick={() => setShowNewSaleModal(true)}
           variant="outline"
-          className="h-20 flex-col space-y-2 hover:bg-primary hover:text-primary-foreground transition-colors"
+          className="h-20 flex-col space-y-2 hover:bg-primary hover:text-primary-foreground transition-colors border-2 shadow-md hover:shadow-lg"
         >
           <Plus className="h-5 w-5" />
           <span className="text-sm font-medium">Nova Venda</span>
@@ -517,7 +517,7 @@ const Index = () => {
 
         <Button 
           variant="outline" 
-          className="h-20 flex-col space-y-2 hover:bg-primary hover:text-primary-foreground transition-colors"
+          className="h-20 flex-col space-y-2 hover:bg-primary hover:text-primary-foreground transition-colors border-2 shadow-md hover:shadow-lg"
         >
           <Download className="h-5 w-5" />
           <span className="text-sm font-medium">Relatório</span>
@@ -526,7 +526,7 @@ const Index = () => {
         <Button 
           onClick={() => setCurrentPage('products')}
           variant="outline" 
-          className="h-20 flex-col space-y-2 hover:bg-primary hover:text-primary-foreground transition-colors"
+          className="h-20 flex-col space-y-2 hover:bg-primary hover:text-primary-foreground transition-colors border-2 shadow-md hover:shadow-lg"
         >
           <Package className="h-5 w-5" />
           <span className="text-sm font-medium">Produtos</span>
@@ -535,7 +535,7 @@ const Index = () => {
         <Button 
           onClick={() => setCurrentPage('sales')}
           variant="outline" 
-          className="h-20 flex-col space-y-2 hover:bg-primary hover:text-primary-foreground transition-colors"
+          className="h-20 flex-col space-y-2 hover:bg-primary hover:text-primary-foreground transition-colors border-2 shadow-md hover:shadow-lg"
         >
           <TrendingUp className="h-5 w-5" />
           <span className="text-sm font-medium">Ver Vendas</span>
@@ -544,7 +544,7 @@ const Index = () => {
 
       {/* Gráficos */}
       <div className="grid gap-4 md:grid-cols-2">
-        <Card>
+        <Card className="border-2 shadow-md">
           <div className="p-6">
             <div className="flex items-center justify-between mb-6">
               <div>
@@ -596,7 +596,7 @@ const Index = () => {
           </div>
         </Card>
 
-        <Card>
+        <Card className="border-2 shadow-md">
           <div className="p-6">
             <div className="flex items-center justify-between mb-6">
               <div>
@@ -645,7 +645,7 @@ const Index = () => {
       </div>
 
       {/* Vendas recentes */}
-      <Card>
+      <Card className="border-2 shadow-md">
         <div className="p-6">
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-lg font-semibold">Vendas Recentes</h3>
@@ -661,7 +661,7 @@ const Index = () => {
           
           <div className="space-y-4">
             {sales.slice(0, 5).map((sale) => (
-              <div key={sale.id} className="flex items-center justify-between p-4 rounded-lg border border-border hover:bg-muted/50 transition-colors">
+              <div key={sale.id} className="flex items-center justify-between p-4 rounded-lg border-2 border-border hover:border-primary/50 hover:bg-muted/50 transition-all shadow-sm hover:shadow-md">
                 <div className="flex items-center space-x-4">
                   <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
                     <ShoppingBag className="h-5 w-5 text-primary" />
@@ -775,8 +775,8 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background transition-colors duration-200">
       {/* Header moderno */}
-      <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container flex h-14 max-w-screen-2xl items-center">
+      <header className="sticky top-0 z-50 w-full border-b-2 border-border bg-card shadow-sm">
+        <div className="flex h-16 items-center px-4 lg:px-6">
           <div className="mr-4 hidden md:flex">
             <div className="bg-gradient-to-r from-primary to-accent w-8 h-8 rounded-lg flex items-center justify-center mr-3 shadow-sm">
               <DollarSign className="w-5 h-5 text-white" />
@@ -876,9 +876,9 @@ const Index = () => {
         </div>
       </header>
 
-      <div className="container grid grid-cols-1 md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr] max-w-screen-2xl">
+      <div className="grid grid-cols-1 md:grid-cols-[240px_1fr] lg:grid-cols-[260px_1fr]">
         {/* Sidebar moderna */}
-        <aside className="hidden md:flex flex-col border-r border-border/40 bg-card/50">
+        <aside className="hidden md:flex flex-col border-r-2 border-border bg-card shadow-sm">
           <div className="flex h-[calc(100vh-3.5rem)] flex-col gap-2">
             <div className="flex-1 overflow-auto py-2">
               <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
@@ -952,26 +952,28 @@ const Index = () => {
         </aside>
 
         {/* Conteúdo principal */}
-        <main className="flex flex-1 flex-col gap-4 p-4 pt-6">
-          <div className="flex items-center justify-between">
-            <div className="grid gap-1">
-              <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-              <p className="text-muted-foreground">
-                Acompanhe suas métricas e performance em tempo real
-              </p>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Button
-                onClick={() => setShowNewSaleModal(true)}
-                className="bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90"
-              >
-                <Plus className="mr-2 h-4 w-4" />
-                Nova Venda
-              </Button>
+        <main className="flex flex-1 flex-col bg-muted/30">
+          <div className="bg-card border-b-2 border-border px-4 lg:px-6 py-4 shadow-sm">
+            <div className="flex items-center justify-between">
+              <div className="grid gap-1">
+                <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
+                <p className="text-muted-foreground">
+                  Acompanhe suas métricas e performance em tempo real
+                </p>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Button
+                  onClick={() => setShowNewSaleModal(true)}
+                  className="bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 shadow-md"
+                >
+                  <Plus className="mr-2 h-4 w-4" />
+                  Nova Venda
+                </Button>
+              </div>
             </div>
           </div>
           
-          <div className="flex-1">
+          <div className="flex-1 p-4 lg:p-6">
             {activeTab === 'dashboard' && <Dashboard />}
             {activeTab === 'sales' && <Dashboard />}
             {activeTab === 'reports' && <Dashboard />}
