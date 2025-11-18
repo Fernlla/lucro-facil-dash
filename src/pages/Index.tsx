@@ -47,6 +47,20 @@ interface NewSale {
 const Index = () => {
   const { user, isAuthenticated, logout } = useAuth();
   
+  // Detectar se é mobile
+  const [isMobile, setIsMobile] = useState(false);
+  
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+  
   // Carregar tema do localStorage
   const [theme, setTheme] = useState<'light' | 'dark' | 'system'>(() => {
     const savedTheme = localStorage.getItem('lucrofacil_theme');
@@ -353,9 +367,87 @@ const Index = () => {
   };
 
   const Dashboard = () => (
-    <div className="space-y-8">
+    <div className="space-y-6 md:space-y-8">
       {/* Cards de métricas modernos */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      {/* Mobile: Scroll horizontal */}
+      <div className="flex md:hidden gap-3 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide -mx-3 px-3">
+        <Card className="relative overflow-hidden border-2 shadow-md min-w-[280px] snap-center">
+          <div className="flex h-28 flex-col justify-between p-5">
+            <div className="flex items-center justify-between space-y-0 pb-2">
+              <p className="text-sm font-medium text-muted-foreground">Faturamento</p>
+              <div className="h-4 w-4 text-muted-foreground">
+                <TrendingUp className="h-4 w-4" />
+              </div>
+            </div>
+            <div>
+              <div className="text-2xl font-bold">R$ {totalRevenue.toFixed(2)}</div>
+              <p className="text-xs text-muted-foreground flex items-center">
+                <ArrowUp className="mr-1 h-3 w-3 text-green-600" />
+                <span className="text-green-600">+15%</span> vs ontem
+              </p>
+            </div>
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 pointer-events-none" />
+          </div>
+        </Card>
+        
+        <Card className="relative overflow-hidden border-2 shadow-md min-w-[280px] snap-center">
+          <div className="flex h-28 flex-col justify-between p-5">
+            <div className="flex items-center justify-between space-y-0 pb-2">
+              <p className="text-sm font-medium text-muted-foreground">Custos</p>
+              <div className="h-4 w-4 text-muted-foreground">
+                <BarChart3 className="h-4 w-4" />
+              </div>
+            </div>
+            <div>
+              <div className="text-2xl font-bold">R$ {totalCosts.toFixed(2)}</div>
+              <p className="text-xs text-muted-foreground flex items-center">
+                <ArrowDown className="mr-1 h-3 w-3 text-red-600" />
+                <span className="text-red-600">-8%</span> vs ontem
+              </p>
+            </div>
+            <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-purple-600/5 pointer-events-none" />
+          </div>
+        </Card>
+        
+        <Card className="relative overflow-hidden border-2 shadow-md min-w-[280px] snap-center">
+          <div className="flex h-28 flex-col justify-between p-5">
+            <div className="flex items-center justify-between space-y-0 pb-2">
+              <p className="text-sm font-medium text-muted-foreground">Lucro Líquido</p>
+              <div className="h-4 w-4 text-muted-foreground">
+                <DollarSign className="h-4 w-4" />
+              </div>
+            </div>
+            <div>
+              <div className="text-2xl font-bold">R$ {totalProfit.toFixed(2)}</div>
+              <p className="text-xs text-muted-foreground">
+                Margem de {profitMargin.toFixed(1)}%
+              </p>
+            </div>
+            <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-emerald-500/5 pointer-events-none" />
+          </div>
+        </Card>
+        
+        <Card className="relative overflow-hidden border-2 shadow-md min-w-[280px] snap-center">
+          <div className="flex h-28 flex-col justify-between p-5">
+            <div className="flex items-center justify-between space-y-0 pb-2">
+              <p className="text-sm font-medium text-muted-foreground">Meta Diária</p>
+              <div className="h-4 w-4 text-muted-foreground">
+                <Target className="h-4 w-4" />
+              </div>
+            </div>
+            <div>
+              <div className="text-2xl font-bold">{dailyProgress.toFixed(0)}%</div>
+              <p className="text-xs text-muted-foreground">
+                R$ {totalProfit.toFixed(2)} de R$ {goals.daily.toFixed(2)}
+              </p>
+            </div>
+            <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/5 to-amber-500/5 pointer-events-none" />
+          </div>
+        </Card>
+      </div>
+      
+      {/* Desktop: Grid normal */}
+      <div className="hidden md:grid md:gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card className="relative overflow-hidden border-2 shadow-md hover:shadow-lg transition-shadow">
           <div className="flex h-32 flex-col justify-between p-6">
             <div className="flex items-center justify-between space-y-0 pb-2">
@@ -459,55 +551,55 @@ const Index = () => {
       </Card>
 
       {/* Grid de ações rápidas */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 md:gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Button 
           onClick={() => setShowNewSaleModal(true)}
           variant="outline"
-          className="h-20 flex-col space-y-2 hover:bg-primary hover:text-primary-foreground transition-colors border-2 shadow-md hover:shadow-lg"
+          className="h-16 md:h-20 flex-col space-y-1 md:space-y-2 hover:bg-primary hover:text-primary-foreground transition-colors border-2 shadow-md hover:shadow-lg"
         >
-          <Plus className="h-5 w-5" />
-          <span className="text-sm font-medium">Nova Venda</span>
+          <Plus className="h-4 w-4 md:h-5 md:w-5" />
+          <span className="text-xs md:text-sm font-medium">Nova Venda</span>
         </Button>
 
         <Button 
           variant="outline" 
-          className="h-20 flex-col space-y-2 hover:bg-primary hover:text-primary-foreground transition-colors border-2 shadow-md hover:shadow-lg"
+          className="h-16 md:h-20 flex-col space-y-1 md:space-y-2 hover:bg-primary hover:text-primary-foreground transition-colors border-2 shadow-md hover:shadow-lg"
         >
-          <Download className="h-5 w-5" />
-          <span className="text-sm font-medium">Relatório</span>
+          <Download className="h-4 w-4 md:h-5 md:w-5" />
+          <span className="text-xs md:text-sm font-medium">Relatório</span>
         </Button>
 
         <Button 
           onClick={() => setCurrentPage('products')}
           variant="outline" 
-          className="h-20 flex-col space-y-2 hover:bg-primary hover:text-primary-foreground transition-colors border-2 shadow-md hover:shadow-lg"
+          className="h-16 md:h-20 flex-col space-y-1 md:space-y-2 hover:bg-primary hover:text-primary-foreground transition-colors border-2 shadow-md hover:shadow-lg"
         >
-          <Package className="h-5 w-5" />
-          <span className="text-sm font-medium">Produtos</span>
+          <Package className="h-4 w-4 md:h-5 md:w-5" />
+          <span className="text-xs md:text-sm font-medium">Produtos</span>
         </Button>
 
         <Button 
           onClick={() => setCurrentPage('sales')}
           variant="outline" 
-          className="h-20 flex-col space-y-2 hover:bg-primary hover:text-primary-foreground transition-colors border-2 shadow-md hover:shadow-lg"
+          className="h-16 md:h-20 flex-col space-y-1 md:space-y-2 hover:bg-primary hover:text-primary-foreground transition-colors border-2 shadow-md hover:shadow-lg"
         >
-          <TrendingUp className="h-5 w-5" />
-          <span className="text-sm font-medium">Ver Vendas</span>
+          <TrendingUp className="h-4 w-4 md:h-5 md:w-5" />
+          <span className="text-xs md:text-sm font-medium">Ver Vendas</span>
         </Button>
       </div>
 
       {/* Gráficos */}
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid gap-3 md:gap-4 md:grid-cols-2">
         <Card className="border-2 shadow-md">
-          <div className="p-6">
-            <div className="flex items-center justify-between mb-6">
+          <div className="p-4 md:p-6">
+            <div className="flex items-center justify-between mb-4 md:mb-6">
               <div>
-                <h3 className="text-lg font-semibold">Faturamento e Lucro (7 dias)</h3>
-                <p className="text-sm text-muted-foreground">Evolução diária do seu negócio</p>
+                <h3 className="text-base md:text-lg font-semibold">Faturamento e Lucro (7 dias)</h3>
+                <p className="text-xs md:text-sm text-muted-foreground">Evolução diária do seu negócio</p>
               </div>
             </div>
             
-            <ResponsiveContainer width="100%" height={300}>
+            <ResponsiveContainer width="100%" height={isMobile ? 240 : 300}>
               <LineChart data={prepareChartData()}>
                 <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                 <XAxis 
@@ -551,15 +643,15 @@ const Index = () => {
         </Card>
 
         <Card className="border-2 shadow-md">
-          <div className="p-6">
-            <div className="flex items-center justify-between mb-6">
+          <div className="p-4 md:p-6">
+            <div className="flex items-center justify-between mb-4 md:mb-6">
               <div>
-                <h3 className="text-lg font-semibold">Top 5 Produtos</h3>
-                <p className="text-sm text-muted-foreground">Mais vendidos do período</p>
+                <h3 className="text-base md:text-lg font-semibold">Top 5 Produtos</h3>
+                <p className="text-xs md:text-sm text-muted-foreground">Mais vendidos do período</p>
               </div>
             </div>
             
-            <ResponsiveContainer width="100%" height={300}>
+            <ResponsiveContainer width="100%" height={isMobile ? 240 : 300}>
               <BarChart data={prepareProductsData()}>
                 <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                 <XAxis 
@@ -923,7 +1015,7 @@ const Index = () => {
             </div>
           </div>
           
-          <div className="flex-1 p-4 lg:p-6">
+          <div className="flex-1 p-3 md:p-4 lg:p-6 pb-20 md:pb-4">
             {activeTab === 'dashboard' && <Dashboard />}
             {activeTab === 'sales' && <Dashboard />}
             {activeTab === 'reports' && <Dashboard />}
@@ -998,14 +1090,68 @@ const Index = () => {
 
       {showNewSaleModal && <NewSaleModal />}
 
-      <div className="md:hidden fixed bottom-6 right-6 z-50">
-        <Button
-          onClick={() => setShowNewSaleModal(true)}
-          className="w-14 h-14 rounded-full shadow-lg bg-gradient-to-r from-primary to-accent"
-        >
-          <Plus className="w-6 h-6" />
-        </Button>
-      </div>
+      {/* Bottom Navigation - Mobile Only */}
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-card border-t-2 border-border shadow-lg z-40">
+        <div className="grid grid-cols-5 gap-1 p-2">
+          <button
+            onClick={() => setCurrentPage('dashboard')}
+            className={`flex flex-col items-center justify-center py-2 px-1 rounded-lg transition-colors ${
+              currentPage === 'dashboard'
+                ? 'bg-primary/10 text-primary'
+                : 'text-muted-foreground hover:text-foreground hover:bg-accent'
+            }`}
+          >
+            <Home className="h-5 w-5 mb-1" />
+            <span className="text-[10px] font-medium">Início</span>
+          </button>
+          
+          <button
+            onClick={() => setCurrentPage('products')}
+            className={`flex flex-col items-center justify-center py-2 px-1 rounded-lg transition-colors ${
+              currentPage === 'products'
+                ? 'bg-primary/10 text-primary'
+                : 'text-muted-foreground hover:text-foreground hover:bg-accent'
+            }`}
+          >
+            <Package className="h-5 w-5 mb-1" />
+            <span className="text-[10px] font-medium">Produtos</span>
+          </button>
+          
+          <button
+            onClick={() => setShowNewSaleModal(true)}
+            className="flex flex-col items-center justify-center -mt-4"
+          >
+            <div className="w-14 h-14 rounded-full shadow-lg bg-gradient-to-r from-primary to-accent flex items-center justify-center mb-1">
+              <Plus className="w-6 h-6 text-white" />
+            </div>
+            <span className="text-[10px] font-medium text-muted-foreground">Vender</span>
+          </button>
+          
+          <button
+            onClick={() => setCurrentPage('sales')}
+            className={`flex flex-col items-center justify-center py-2 px-1 rounded-lg transition-colors ${
+              currentPage === 'sales'
+                ? 'bg-primary/10 text-primary'
+                : 'text-muted-foreground hover:text-foreground hover:bg-accent'
+            }`}
+          >
+            <TrendingUp className="h-5 w-5 mb-1" />
+            <span className="text-[10px] font-medium">Vendas</span>
+          </button>
+          
+          <button
+            onClick={() => setCurrentPage('assistant')}
+            className={`flex flex-col items-center justify-center py-2 px-1 rounded-lg transition-colors ${
+              currentPage === 'assistant'
+                ? 'bg-primary/10 text-primary'
+                : 'text-muted-foreground hover:text-foreground hover:bg-accent'
+            }`}
+          >
+            <Bot className="h-5 w-5 mb-1" />
+            <span className="text-[10px] font-medium">IA</span>
+          </button>
+        </div>
+      </nav>
     </div>
   );
 };
