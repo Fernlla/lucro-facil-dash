@@ -46,7 +46,12 @@ interface NewSale {
 
 const Index = () => {
   const { user, isAuthenticated, logout } = useAuth();
-  const [theme, setTheme] = useState<'light' | 'dark' | 'system'>('light');
+  
+  // Carregar tema do localStorage
+  const [theme, setTheme] = useState<'light' | 'dark' | 'system'>(() => {
+    const savedTheme = localStorage.getItem('lucrofacil_theme');
+    return (savedTheme as 'light' | 'dark' | 'system') || 'light';
+  });
   const [activeTheme, setActiveTheme] = useState<'light' | 'dark'>('light');
   const [activeTab, setActiveTab] = useState('dashboard');
   const [showThemeMenu, setShowThemeMenu] = useState(false);
@@ -125,6 +130,9 @@ const Index = () => {
   const [newSale, setNewSale] = useState<NewSale>({ productId: '', quantity: 1, customPrice: '' });
 
   useEffect(() => {
+    // Salvar tema no localStorage
+    localStorage.setItem('lucrofacil_theme', theme);
+    
     if (theme === 'system') {
       const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
       setActiveTheme(systemTheme);
@@ -727,14 +735,14 @@ const Index = () => {
           </div>
           
           <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
-            <div className="w-full flex-1 md:w-auto md:flex-none">
+            <div className="w-full flex-1 md:w-auto md:flex-none md:hidden">
               <div className="flex items-center space-x-2">
                 <button
                   onClick={() => setShowMobileMenu(!showMobileMenu)}
                   className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2"
                 >
                   <Menu className="h-4 w-4" />
-                  <span className="ml-2 hidden md:inline">Menu</span>
+                  <span className="ml-2">Menu</span>
                 </button>
               </div>
             </div>
