@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { 
   DollarSign, TrendingUp, BarChart3, Target, Check, Star, 
   ArrowRight, Play, Users, Award, Shield, Zap, 
@@ -109,6 +110,27 @@ const Landing = () => {
       avatar: 'AC',
       rating: 5,
       text: 'Minhas vendas aumentaram 40% depois que comecei a usar as análises do LucroFácil.'
+    },
+    {
+      name: 'Pedro Oliveira',
+      business: 'Padaria São José',
+      avatar: 'PO',
+      rating: 5,
+      text: 'Descobri que alguns produtos não eram lucrativos. Depois de ajustar os preços, meu lucro dobrou!'
+    },
+    {
+      name: 'Carla Mendes',
+      business: 'Boutique Fashion',
+      avatar: 'CM',
+      rating: 5,
+      text: 'O assistente IA me ajudou a identificar tendências e aumentar minhas vendas em 60%.'
+    },
+    {
+      name: 'Rafael Torres',
+      business: 'Lanchonete Express',
+      avatar: 'RT',
+      rating: 5,
+      text: 'Controle de estoque e lucros em tempo real. Não consigo mais trabalhar sem o LucroFácil.'
     }
   ];
 
@@ -580,8 +602,8 @@ const Landing = () => {
         </div>
       </section>
 
-      {/* Testimonials Section - Modern Design */}
-      <section id="testimonials" className="py-20 bg-background">
+      {/* Testimonials Section - Animated Infinite Scroll */}
+      <section id="testimonials" className="py-20 bg-muted/30 overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <Badge variant="outline" className="mb-4 bg-primary/5 border-primary/20 text-primary">
@@ -595,34 +617,126 @@ const Landing = () => {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            {testimonials.map((testimonial, index) => (
-              <Card key={index} className="group hover:shadow-lg transition-all duration-300 border-border/50 hover:border-primary/20">
-                <CardContent className="p-6">
-                  <div className="flex items-center mb-4">
-                    {[...Array(testimonial.rating)].map((_, i) => (
-                      <StarIcon key={i} className="w-5 h-5 text-warning fill-current" />
+          <div className="flex justify-center gap-6 [mask-image:linear-gradient(to_bottom,transparent,black_25%,black_75%,transparent)] max-h-[738px] overflow-hidden">
+            {/* Column 1 */}
+            <div className="flex-1 max-w-xs">
+              <motion.div
+                animate={{
+                  translateY: "-50%",
+                }}
+                transition={{
+                  duration: 15,
+                  repeat: Infinity,
+                  ease: "linear",
+                  repeatType: "loop",
+                }}
+                className="flex flex-col gap-6 pb-6"
+              >
+                {[...new Array(2)].fill(0).map((_, index) => (
+                  <div key={index}>
+                    {testimonials.slice(0, 2).map((testimonial, i) => (
+                      <div key={i} className="p-10 rounded-3xl border border-border/50 bg-background shadow-lg shadow-primary/10 max-w-xs w-full mb-6">
+                        <div className="flex items-center mb-4">
+                          {[...Array(testimonial.rating)].map((_, starIndex) => (
+                            <StarIcon key={starIndex} className="w-5 h-5 text-warning fill-current" />
+                          ))}
+                        </div>
+                        <div className="text-muted-foreground mb-5">{testimonial.text}</div>
+                        <div className="flex items-center gap-2">
+                          <div className="w-10 h-10 bg-gradient-to-r from-primary to-accent rounded-full flex items-center justify-center text-white font-semibold">
+                            {testimonial.avatar}
+                          </div>
+                          <div className="flex flex-col">
+                            <div className="font-medium tracking-tight leading-5 text-foreground">{testimonial.name}</div>
+                            <div className="leading-5 opacity-60 tracking-tight text-muted-foreground text-sm">{testimonial.business}</div>
+                          </div>
+                        </div>
+                      </div>
                     ))}
                   </div>
-                  <p className="mb-6 text-muted-foreground italic">
-                    "{testimonial.text}"
-                  </p>
-                  <div className="flex items-center">
-                    <div className="w-12 h-12 bg-gradient-to-r from-primary to-accent rounded-full flex items-center justify-center text-white font-semibold mr-4 group-hover:scale-110 transition-transform duration-300">
-                      {testimonial.avatar}
-                    </div>
-                    <div>
-                      <div className="font-semibold text-foreground">
-                        {testimonial.name}
+                ))}
+              </motion.div>
+            </div>
+
+            {/* Column 2 */}
+            <div className="flex-1 max-w-xs hidden md:block">
+              <motion.div
+                animate={{
+                  translateY: "-50%",
+                }}
+                transition={{
+                  duration: 20,
+                  repeat: Infinity,
+                  ease: "linear",
+                  repeatType: "loop",
+                }}
+                className="flex flex-col gap-6 pb-6"
+              >
+                {[...new Array(2)].fill(0).map((_, index) => (
+                  <div key={index}>
+                    {testimonials.slice(2, 4).map((testimonial, i) => (
+                      <div key={i} className="p-10 rounded-3xl border border-border/50 bg-background shadow-lg shadow-primary/10 max-w-xs w-full mb-6">
+                        <div className="flex items-center mb-4">
+                          {[...Array(testimonial.rating)].map((_, starIndex) => (
+                            <StarIcon key={starIndex} className="w-5 h-5 text-warning fill-current" />
+                          ))}
+                        </div>
+                        <div className="text-muted-foreground mb-5">{testimonial.text}</div>
+                        <div className="flex items-center gap-2">
+                          <div className="w-10 h-10 bg-gradient-to-r from-primary to-accent rounded-full flex items-center justify-center text-white font-semibold">
+                            {testimonial.avatar}
+                          </div>
+                          <div className="flex flex-col">
+                            <div className="font-medium tracking-tight leading-5 text-foreground">{testimonial.name}</div>
+                            <div className="leading-5 opacity-60 tracking-tight text-muted-foreground text-sm">{testimonial.business}</div>
+                          </div>
+                        </div>
                       </div>
-                      <div className="text-sm text-muted-foreground">
-                        {testimonial.business}
-                      </div>
-                    </div>
+                    ))}
                   </div>
-                </CardContent>
-              </Card>
-            ))}
+                ))}
+              </motion.div>
+            </div>
+
+            {/* Column 3 */}
+            <div className="flex-1 max-w-xs hidden lg:block">
+              <motion.div
+                animate={{
+                  translateY: "-50%",
+                }}
+                transition={{
+                  duration: 18,
+                  repeat: Infinity,
+                  ease: "linear",
+                  repeatType: "loop",
+                }}
+                className="flex flex-col gap-6 pb-6"
+              >
+                {[...new Array(2)].fill(0).map((_, index) => (
+                  <div key={index}>
+                    {testimonials.slice(4, 6).map((testimonial, i) => (
+                      <div key={i} className="p-10 rounded-3xl border border-border/50 bg-background shadow-lg shadow-primary/10 max-w-xs w-full mb-6">
+                        <div className="flex items-center mb-4">
+                          {[...Array(testimonial.rating)].map((_, starIndex) => (
+                            <StarIcon key={starIndex} className="w-5 h-5 text-warning fill-current" />
+                          ))}
+                        </div>
+                        <div className="text-muted-foreground mb-5">{testimonial.text}</div>
+                        <div className="flex items-center gap-2">
+                          <div className="w-10 h-10 bg-gradient-to-r from-primary to-accent rounded-full flex items-center justify-center text-white font-semibold">
+                            {testimonial.avatar}
+                          </div>
+                          <div className="flex flex-col">
+                            <div className="font-medium tracking-tight leading-5 text-foreground">{testimonial.name}</div>
+                            <div className="leading-5 opacity-60 tracking-tight text-muted-foreground text-sm">{testimonial.business}</div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ))}
+              </motion.div>
+            </div>
           </div>
         </div>
       </section>

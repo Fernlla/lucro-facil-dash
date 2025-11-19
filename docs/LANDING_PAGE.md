@@ -174,7 +174,7 @@ A landing page do LucroFácil foi desenvolvida seguindo o modelo **AIDA** (Atten
 - [ ] Calculadora de ROI
 - [ ] Demo interativa
 - [ ] Integração com CRM
-- [ ] A/B Testing automático
+- [ ] A/B Testing 
 
 ### **Analytics**
 - [ ] Google Analytics 4
