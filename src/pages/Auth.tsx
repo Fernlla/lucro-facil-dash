@@ -34,33 +34,39 @@ export default function Auth({ theme, onBack }: AuthProps) {
         }
         await signup(formData.name, formData.email, formData.password);
       }
-      // Sucesso - o usuário será redirecionado automaticamente pelo Index
       onBack();
-    } catch (err: any) {
-      setError(err.message || 'Erro ao autenticar. Tente novamente.');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Erro ao autenticar. Tente novamente.');
     } finally {
       setIsLoading(false);
     }
   };
 
+  const bgClass = isDark ? 'bg-slate-900' : 'bg-gray-50';
+  const textClass = isDark ? 'text-slate-100' : 'text-gray-900';
+  const mutedClass = isDark ? 'text-slate-400' : 'text-gray-600';
+  const cardClass = isDark ? 'bg-slate-800 border-slate-700' : 'bg-white border-gray-200';
+  const inputBg = isDark ? 'bg-slate-900 border-slate-700' : 'bg-gray-50 border-gray-300';
+  const iconClass = isDark ? 'text-slate-400' : 'text-gray-500';
+
   return (
-    <div className={`min-h-screen ${isDark ? 'bg-slate-900' : 'bg-gray-50'} flex items-center justify-center p-4`}>
+    <div className={`min-h-screen ${bgClass} flex items-center justify-center p-4`}>
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-600 to-blue-500 shadow-lg mb-4">
             <span className="text-2xl font-bold text-white">L</span>
           </div>
-          <h1 className={`text-3xl font-bold ${isDark ? 'text-slate-100' : 'text-gray-900'} mb-2`}>
+          <h1 className={`text-3xl font-bold ${textClass} mb-2`}>
             LucroFácil
           </h1>
-          <p className={`text-sm ${isDark ? 'text-slate-400' : 'text-gray-600'}`}>
+          <p className={`text-sm ${mutedClass}`}>
             {isLogin ? 'Entre na sua conta' : 'Crie sua conta'}
           </p>
         </div>
 
         {/* Form Card */}
-        <div className={`rounded-2xl p-8 shadow-lg ${isDark ? 'bg-slate-800 border border-slate-700' : 'bg-white border border-gray-200'}`}>
+        <div className={`rounded-2xl p-8 shadow-lg border ${cardClass}`}>
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Error Message */}
             {error && (
@@ -72,19 +78,17 @@ export default function Auth({ theme, onBack }: AuthProps) {
             {/* Name Field (only for signup) */}
             {!isLogin && (
               <div>
-                <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-slate-300' : 'text-gray-700'}`}>
+                <label className="block text-sm font-medium mb-2">
                   Nome completo
                 </label>
-                <div className={`flex items-center gap-3 px-4 py-3 rounded-xl border ${
-                  isDark ? 'bg-slate-900 border-slate-700' : 'bg-gray-50 border-gray-300'
-                } focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500 transition-all`}>
-                  <User size={20} className={isDark ? 'text-slate-400' : 'text-gray-500'} />
+                <div className={`flex items-center gap-3 px-4 py-3 rounded-xl border ${inputBg} focus-within:ring-2 focus-within:ring-blue-500 transition-all`}>
+                  <User size={20} className={iconClass} />
                   <input
                     type="text"
                     placeholder="Maria Silva"
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className={`flex-1 bg-transparent outline-none ${isDark ? 'text-slate-100' : 'text-gray-900'} placeholder:${isDark ? 'text-slate-500' : 'text-gray-400'}`}
+                    className="flex-1 bg-transparent outline-none"
                   />
                 </div>
               </div>
@@ -92,19 +96,17 @@ export default function Auth({ theme, onBack }: AuthProps) {
 
             {/* Email Field */}
             <div>
-              <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-slate-300' : 'text-gray-700'}`}>
+              <label className="block text-sm font-medium mb-2">
                 E-mail
               </label>
-              <div className={`flex items-center gap-3 px-4 py-3 rounded-xl border ${
-                isDark ? 'bg-slate-900 border-slate-700' : 'bg-gray-50 border-gray-300'
-              } focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500 transition-all`}>
-                <Mail size={20} className={isDark ? 'text-slate-400' : 'text-gray-500'} />
+              <div className={`flex items-center gap-3 px-4 py-3 rounded-xl border ${inputBg} focus-within:ring-2 focus-within:ring-blue-500 transition-all`}>
+                <Mail size={20} className={iconClass} />
                 <input
                   type="email"
                   placeholder="seu@email.com"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className={`flex-1 bg-transparent outline-none ${isDark ? 'text-slate-100' : 'text-gray-900'} placeholder:${isDark ? 'text-slate-500' : 'text-gray-400'}`}
+                  className="flex-1 bg-transparent outline-none"
                   required
                 />
               </div>
@@ -112,25 +114,23 @@ export default function Auth({ theme, onBack }: AuthProps) {
 
             {/* Password Field */}
             <div>
-              <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-slate-300' : 'text-gray-700'}`}>
+              <label className="block text-sm font-medium mb-2">
                 Senha
               </label>
-              <div className={`flex items-center gap-3 px-4 py-3 rounded-xl border ${
-                isDark ? 'bg-slate-900 border-slate-700' : 'bg-gray-50 border-gray-300'
-              } focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500 transition-all`}>
-                <Lock size={20} className={isDark ? 'text-slate-400' : 'text-gray-500'} />
+              <div className={`flex items-center gap-3 px-4 py-3 rounded-xl border ${inputBg} focus-within:ring-2 focus-within:ring-blue-500 transition-all`}>
+                <Lock size={20} className={iconClass} />
                 <input
                   type={showPassword ? 'text' : 'password'}
                   placeholder="••••••••"
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                  className={`flex-1 bg-transparent outline-none ${isDark ? 'text-slate-100' : 'text-gray-900'} placeholder:${isDark ? 'text-slate-500' : 'text-gray-400'}`}
+                  className="flex-1 bg-transparent outline-none"
                   required
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className={`${isDark ? 'text-slate-400 hover:text-slate-300' : 'text-gray-500 hover:text-gray-600'} transition-colors`}
+                  className="transition-colors hover:opacity-70"
                 >
                   {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                 </button>
@@ -168,7 +168,7 @@ export default function Auth({ theme, onBack }: AuthProps) {
 
           {/* Toggle Login/Signup */}
           <div className="mt-6 text-center">
-            <p className={`text-sm ${isDark ? 'text-slate-400' : 'text-gray-600'}`}>
+            <p className={`text-sm ${mutedClass}`}>
               {isLogin ? 'Não tem uma conta?' : 'Já tem uma conta?'}
               {' '}
               <button
@@ -187,7 +187,7 @@ export default function Auth({ theme, onBack }: AuthProps) {
           <div className="mt-4 text-center">
             <button
               onClick={onBack}
-              className={`text-sm ${isDark ? 'text-slate-500 hover:text-slate-400' : 'text-gray-500 hover:text-gray-600'} transition-colors`}
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
               ← Voltar para início
             </button>
@@ -195,7 +195,7 @@ export default function Auth({ theme, onBack }: AuthProps) {
         </div>
 
         {/* Terms */}
-        <p className={`text-xs text-center mt-6 ${isDark ? 'text-slate-500' : 'text-gray-500'}`}>
+        <p className="text-xs text-center mt-6 text-muted-foreground">
           Ao continuar, você concorda com os{' '}
           <a href="#" className="text-blue-600 hover:text-blue-700">Termos de Uso</a>
           {' '}e{' '}

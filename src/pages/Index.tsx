@@ -73,8 +73,7 @@ const Index = () => {
   const [showNewSaleModal, setShowNewSaleModal] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
-  type PageType = 'dashboard' | 'profile' | 'settings' | 'products' | 'notifications' | 'help' | 'auth' | 'assistant' | 'sales';
-  const [currentPage, setCurrentPage] = useState<PageType>('dashboard');
+  const [currentPage, setCurrentPage] = useState<'dashboard' | 'profile' | 'settings' | 'products' | 'notifications' | 'help' | 'auth' | 'assistant' | 'sales'>('dashboard');
   
   const handleLogout = () => {
     logout();
@@ -968,7 +967,7 @@ const Index = () => {
                       label: 'Assistente IA',
                       icon: <Bot className="h-5 w-5 text-foreground flex-shrink-0" />,
                       onClick: () => {
-                        setCurrentPage('assistant' as PageType);
+                        setCurrentPage('assistant');
                         setShowMobileMenu(false);
                       }
                     }}
@@ -1097,7 +1096,7 @@ const Index = () => {
                   setShowMobileMenu(false);
                 }}
                 className={`flex items-center gap-3 rounded-lg px-3 py-2 text-left text-sm transition-all hover:bg-accent hover:text-accent-foreground w-full ${
-                  currentPage === ('assistant' as PageType)
+                  currentPage === 'assistant'
                     ? 'bg-accent text-accent-foreground' 
                     : 'text-muted-foreground'
                 }`}
