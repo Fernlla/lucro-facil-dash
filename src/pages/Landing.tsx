@@ -12,11 +12,10 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Pricing } from '@/components/ui/pricing';
+import { LucroFacilNavbar } from '@/components/ui/lucrofacil-navbar';
 
 const Landing = () => {
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
-  const [showMobileMenu, setShowMobileMenu] = useState(false);
-  const [showPricingDetails, setShowPricingDetails] = useState<string | null>(null);
   
   // Identificador único da landing page
   const landingId = 'lucrofacil-landing-v1.0';
@@ -150,90 +149,11 @@ const Landing = () => {
 
   return (
     <div id={landingId} className={`min-h-screen ${isDark ? 'bg-slate-900' : 'bg-white'} transition-colors duration-200`}>
-      {/* Navigation */}
-      <nav className={`${isDark ? 'bg-slate-800/95' : 'bg-white/95'} backdrop-blur-lg border-b ${isDark ? 'border-slate-700' : 'border-gray-200'} sticky top-0 z-50`}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center">
-              <div className="bg-gradient-to-r from-blue-600 to-purple-600 w-10 h-10 rounded-2xl flex items-center justify-center mr-3 shadow-lg">
-                <DollarSign className="w-6 h-6 text-white" />
-              </div>
-              <span className={`text-xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                LucroFácil
-              </span>
-            </div>
-
-            <div className="hidden md:flex items-center space-x-8">
-              <a href="#features" className={`${isDark ? 'text-slate-300 hover:text-white' : 'text-gray-600 hover:text-gray-900'} transition-colors`}>
-                Recursos
-              </a>
-              <a href="#pricing" className={`${isDark ? 'text-slate-300 hover:text-white' : 'text-gray-600 hover:text-gray-900'} transition-colors`}>
-                Preços
-              </a>
-              <a href="#testimonials" className={`${isDark ? 'text-slate-300 hover:text-white' : 'text-gray-600 hover:text-gray-900'} transition-colors`}>
-                Depoimentos
-              </a>
-              <a href="#contact" className={`${isDark ? 'text-slate-300 hover:text-white' : 'text-gray-600 hover:text-gray-900'} transition-colors`}>
-                Contato
-              </a>
-            </div>
-
-            <div className="flex items-center space-x-4">
-              <Button 
-                variant="outline" 
-                className="hidden sm:flex"
-                onClick={() => window.location.href = '/auth'}
-              >
-                Entrar / Cadastrar
-              </Button>
-              <Button 
-                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
-                onClick={() => window.location.href = '/auth'}
-              >
-                Começar Grátis
-              </Button>
-              
-              <button
-                onClick={() => setShowMobileMenu(!showMobileMenu)}
-                className="md:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700"
-              >
-                {showMobileMenu ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Mobile Menu */}
-        {showMobileMenu && (
-          <div className={`md:hidden ${isDark ? 'bg-slate-800' : 'bg-white'} border-t ${isDark ? 'border-slate-700' : 'border-gray-200'}`}>
-            <div className="px-4 py-4 space-y-2">
-              <a href="#features" className={`block px-3 py-2 ${isDark ? 'text-slate-300 hover:text-white' : 'text-gray-600 hover:text-gray-900'}`}>
-                Recursos
-              </a>
-              <a href="#pricing" className={`block px-3 py-2 ${isDark ? 'text-slate-300 hover:text-white' : 'text-gray-600 hover:text-gray-900'}`}>
-                Preços
-              </a>
-              <a href="#testimonials" className={`block px-3 py-2 ${isDark ? 'text-slate-300 hover:text-white' : 'text-gray-600 hover:text-gray-900'}`}>
-                Depoimentos
-              </a>
-              <a href="#contact" className={`block px-3 py-2 ${isDark ? 'text-slate-300 hover:text-white' : 'text-gray-600 hover:text-gray-900'}`}>
-                Contato
-              </a>
-              <div className="pt-2 space-y-2">
-                <Button variant="outline" className="w-full" onClick={() => window.location.href = '/auth'}>
-                  Entrar / Cadastrar
-                </Button>
-                <Button className="w-full bg-gradient-to-r from-blue-600 to-purple-600" onClick={() => window.location.href = '/auth'}>
-                  Começar Grátis
-                </Button>
-              </div>
-            </div>
-          </div>
-        )}
-      </nav>
+      {/* Mini Navbar - Fixed Top */}
+      <LucroFacilNavbar />
 
       {/* Hero Section - Inspirado no Bling */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-primary via-primary/95 to-accent py-20 lg:py-32">
+      <section className="relative overflow-hidden bg-gradient-to-br from-primary via-primary/95 to-accent pt-32 pb-20 lg:pt-40 lg:pb-32">
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             {/* Left Column - Content */}
