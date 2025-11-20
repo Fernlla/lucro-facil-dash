@@ -48,32 +48,26 @@ interface NewSale {
 const Index = () => {
   const { user, isAuthenticated, logout } = useAuth();
   
-  // Detectar se é mobile
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    
-    return () => window.removeEventListener('resize', checkMobile);
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
   
-  // Carregar tema do localStorage
-  const [theme, setTheme] = useState<'light' | 'dark' | 'system'>(() => {
-    const savedTheme = localStorage.getItem('lucrofacil_theme');
-    return (savedTheme as 'light' | 'dark' | 'system') || 'light';
-  });
+  const [theme, setTheme] = useState<'light' | 'dark' | 'system'>(() => 
+    (localStorage.getItem('lucrofacil_theme') as 'light' | 'dark' | 'system') || 'light'
+  );
   const [activeTheme, setActiveTheme] = useState<'light' | 'dark'>('light');
+  type PageType = 'dashboard' | 'profile' | 'settings' | 'products' | 'notifications' | 'help' | 'auth' | 'assistant' | 'sales';
+  
   const [activeTab, setActiveTab] = useState('dashboard');
   const [showThemeMenu, setShowThemeMenu] = useState(false);
   const [showNewSaleModal, setShowNewSaleModal] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
-  const [currentPage, setCurrentPage] = useState<'dashboard' | 'profile' | 'settings' | 'products' | 'notifications' | 'help' | 'auth' | 'assistant' | 'sales'>('dashboard');
+  const [currentPage, setCurrentPage] = useState<PageType>('dashboard');
   
   const handleLogout = () => {
     logout();
@@ -98,37 +92,33 @@ const Index = () => {
     { id: 10, name: 'Milk-shake Chocolate', cost: 3.50, price: 8.00, category: 'Bebidas', active: true },
   ]);
 
-  // Gerar vendas dos últimos 7 dias
   const generateHistoricalSales = () => {
     const sales: Sale[] = [];
-    const today = new Date();
     let saleId = 1;
     
     for (let dayOffset = 6; dayOffset >= 0; dayOffset--) {
-      const date = new Date(today);
+      const date = new Date();
       date.setDate(date.getDate() - dayOffset);
       date.setHours(0, 0, 0, 0);
       
-      // Vendas aleatórias por dia (entre 10-25 vendas)
       const salesPerDay = Math.floor(Math.random() * 16) + 10;
       
       for (let i = 0; i < salesPerDay; i++) {
-        const randomProduct = products[Math.floor(Math.random() * products.length)];
+        const product = products[Math.floor(Math.random() * products.length)];
         const quantity = Math.floor(Math.random() * 5) + 1;
-        const salePrice = randomProduct.price;
-        const profit = quantity * (salePrice - randomProduct.cost);
+        const profit = quantity * (product.price - product.cost);
         
         const saleDate = new Date(date);
-        saleDate.setHours(Math.floor(Math.random() * 12) + 8); // Entre 8h e 20h
+        saleDate.setHours(Math.floor(Math.random() * 12) + 8);
         saleDate.setMinutes(Math.floor(Math.random() * 60));
         
         sales.push({
           id: saleId++,
-          productId: randomProduct.id,
-          product: randomProduct.name,
+          productId: product.id,
+          product: product.name,
           quantity,
-          price: salePrice,
-          cost: randomProduct.cost,
+          price: product.price,
+          cost: product.cost,
           date: saleDate,
           profit
         });

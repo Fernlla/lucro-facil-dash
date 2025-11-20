@@ -61,14 +61,14 @@ export default function AuthPage() {
     setIsLoading(true);
     
     try {
-      if (isLogin) {
-        await login(formData.email, formData.password);
-      } else {
-        if (!formData.name) {
-          throw new Error('Por favor, preencha seu nome');
-        }
-        await signup(formData.name, formData.email, formData.password);
+      if (!isLogin && !formData.name) {
+        throw new Error('Por favor, preencha seu nome');
       }
+      
+      await (isLogin 
+        ? login(formData.email, formData.password)
+        : signup(formData.name, formData.email, formData.password)
+      );
       
       navigate('/app');
     } catch (err) {

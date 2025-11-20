@@ -54,21 +54,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setIsLoading(true);
     
     try {
-      // Simular delay de autenticação
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      // Buscar usuário do localStorage (usuários registrados)
       const users: StoredUser[] = JSON.parse(localStorage.getItem('lucrofacil_users') || '[]');
-      const foundUser = users.find((u: StoredUser) => u.email === email && u.password === password);
+      const foundUser = users.find(u => u.email === email && u.password === password);
       
-      if (!foundUser) {
-        throw new Error('E-mail ou senha inválidos');
-      }
+      if (!foundUser) throw new Error('E-mail ou senha inválidos');
       
-      // Remover senha do objeto do usuário
       const { password: _, ...userWithoutPassword } = foundUser;
       
-      // Salvar usuário autenticado
       localStorage.setItem('lucrofacil_user', JSON.stringify(userWithoutPassword));
       localStorage.setItem('lucrofacil_auth', 'true');
       setUser(userWithoutPassword);
@@ -81,32 +75,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setIsLoading(true);
     
     try {
-      // Simular delay de registro
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      // Verificar se o email já existe
       const users: StoredUser[] = JSON.parse(localStorage.getItem('lucrofacil_users') || '[]');
-      const emailExists = users.some((u: StoredUser) => u.email === email);
       
-      if (emailExists) {
+      if (users.some(u => u.email === email)) {
         throw new Error('Este e-mail já está cadastrado');
       }
       
-      // Criar novo usuário
       const newUser: StoredUser = {
         id: `user_${Date.now()}`,
         name,
         email,
-        password, // Armazenado apenas no array de usuários
+        password,
         avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${name}`,
         createdAt: new Date().toISOString()
       };
       
-      // Salvar usuário na lista
       users.push(newUser);
       localStorage.setItem('lucrofacil_users', JSON.stringify(users));
       
-      // Fazer login automático
       const { password: _, ...userWithoutPassword } = newUser;
       localStorage.setItem('lucrofacil_user', JSON.stringify(userWithoutPassword));
       localStorage.setItem('lucrofacil_auth', 'true');

@@ -7,8 +7,8 @@ interface ProductsProps {
 }
 
 const Products: React.FC<ProductsProps> = ({ theme, onClose }) => {
-  const isDark = theme === 'dark';
   const [showModal, setShowModal] = useState(false);
+  const isDark = theme === 'dark';
 
   const products = [
     { id: 1, name: 'Sorvete Chocolate', cost: 2.50, price: 5.00, stock: 150, category: 'Sorvetes', sales: 245 },

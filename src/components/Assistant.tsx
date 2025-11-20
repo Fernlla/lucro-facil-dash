@@ -12,14 +12,14 @@ interface Message {
   content: string;
 }
 
+const INITIAL_MESSAGE: Message = {
+  role: 'assistant',
+  content: 'Olá! Sou seu assistente do LucroFácil. Como posso ajudar você hoje? 😊'
+};
+
 export default function Assistant({ theme, onClose }: AssistantProps) {
   const isDark = theme === 'dark';
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      role: 'assistant',
-      content: 'Olá! Sou seu assistente do LucroFácil. Como posso ajudar você hoje? 😊'
-    }
-  ]);
+  const [messages, setMessages] = useState<Message[]>([INITIAL_MESSAGE]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -32,6 +32,16 @@ export default function Assistant({ theme, onClose }: AssistantProps) {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  const handleError = (status: number) => {
+    const errors: Record<number, { title: string; description: string }> = {
+      429: { title: "Muitas requisições", description: "Aguarde um momento antes de enviar outra mensagem." },
+      402: { title: "Créditos esgotados", description: "Os créditos de IA foram esgotados." },
+    };
+    
+    const error = errors[status] || { title: "Erro", description: "Falha ao conectar com o assistente" };
+    toast({ ...error, variant: "destructive" });
+  };
 
   const streamChat = async (userMessage: Message) => {
     const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat-assistant`;
@@ -47,23 +57,8 @@ export default function Assistant({ theme, onClose }: AssistantProps) {
       });
 
       if (!resp.ok) {
-        if (resp.status === 429) {
-          toast({
-            title: "Muitas requisições",
-            description: "Aguarde um momento antes de enviar outra mensagem.",
-            variant: "destructive",
-          });
-          return;
-        }
-        if (resp.status === 402) {
-          toast({
-            title: "Créditos esgotados",
-            description: "Os créditos de IA foram esgotados.",
-            variant: "destructive",
-          });
-          return;
-        }
-        throw new Error("Falha ao conectar com o assistente");
+        handleError(resp.status);
+        return;
       }
 
       if (!resp.body) throw new Error("Resposta sem conteúdo");

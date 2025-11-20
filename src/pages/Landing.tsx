@@ -16,78 +16,15 @@ import { LucroFacilNavbar } from '@/components/ui/lucrofacil-navbar';
 
 const Landing = () => {
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
-  
-  // Identificador único da landing page
-  const landingId = 'lucrofacil-landing-v1.0';
 
   useEffect(() => {
-    const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    setTheme(systemTheme);
-    
-    if (systemTheme === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    setTheme(isDarkMode ? 'dark' : 'light');
+    document.documentElement.classList.toggle('dark', isDarkMode);
   }, []);
 
   const isDark = theme === 'dark';
-
-  const pricingPlans = [
-    {
-      id: 'starter',
-      name: 'Starter',
-      price: 19.90,
-      period: 'mês',
-      description: 'Perfeito para começar',
-      features: [
-        'Até 50 produtos',
-        'Controle de vendas básico',
-        'Relatórios mensais',
-        'Suporte por email',
-        'Assistente IA básico'
-      ],
-      popular: false,
-      color: 'from-blue-500 to-blue-600'
-    },
-    {
-      id: 'professional',
-      name: 'Professional',
-      price: 39.90,
-      period: 'mês',
-      description: 'Para negócios em crescimento',
-      features: [
-        'Produtos ilimitados',
-        'Controle avançado de vendas',
-        'Relatórios em tempo real',
-        'Suporte prioritário',
-        'Assistente IA completo',
-        'Integração com APIs',
-        'Backup automático'
-      ],
-      popular: true,
-      color: 'from-purple-500 to-purple-600'
-    },
-    {
-      id: 'enterprise',
-      name: 'Enterprise',
-      price: 89.90,
-      period: 'mês',
-      description: 'Para grandes operações',
-      features: [
-        'Tudo do Professional',
-        'Multi-usuários',
-        'Relatórios personalizados',
-        'Suporte 24/7',
-        'API completa',
-        'White-label',
-        'Consultoria especializada',
-        'SLA garantido'
-      ],
-      popular: false,
-      color: 'from-emerald-500 to-emerald-600'
-    }
-  ];
+  const landingId = 'lucrofacil-landing-v1.0';
 
   const testimonials = [
     {
