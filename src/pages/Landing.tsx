@@ -94,6 +94,7 @@ const Landing = () => {
       name: 'Maria Silva',
       business: 'Sorveteria Doce Vida',
       avatar: 'MS',
+      image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200&h=200&fit=crop',
       rating: 5,
       text: 'O LucroFácil transformou meu negócio! Agora sei exatamente quanto lucro cada produto me dá.'
     },
@@ -101,6 +102,7 @@ const Landing = () => {
       name: 'João Santos',
       business: 'Confecção Artesanal',
       avatar: 'JS',
+      image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop',
       rating: 5,
       text: 'A interface é incrível e o assistente IA me ajuda com dicas valiosas todos os dias.'
     },
@@ -108,6 +110,7 @@ const Landing = () => {
       name: 'Ana Costa',
       business: 'Loja de Cosméticos',
       avatar: 'AC',
+      image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop',
       rating: 5,
       text: 'Minhas vendas aumentaram 40% depois que comecei a usar as análises do LucroFácil.'
     },
@@ -115,6 +118,7 @@ const Landing = () => {
       name: 'Pedro Oliveira',
       business: 'Padaria São José',
       avatar: 'PO',
+      image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop',
       rating: 5,
       text: 'Descobri que alguns produtos não eram lucrativos. Depois de ajustar os preços, meu lucro dobrou!'
     },
@@ -122,6 +126,7 @@ const Landing = () => {
       name: 'Carla Mendes',
       business: 'Boutique Fashion',
       avatar: 'CM',
+      image: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=200&h=200&fit=crop',
       rating: 5,
       text: 'O assistente IA me ajudou a identificar tendências e aumentar minhas vendas em 60%.'
     },
@@ -129,6 +134,7 @@ const Landing = () => {
       name: 'Rafael Torres',
       business: 'Lanchonete Express',
       avatar: 'RT',
+      image: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=200&h=200&fit=crop',
       rating: 5,
       text: 'Controle de estoque e lucros em tempo real. Não consigo mais trabalhar sem o LucroFácil.'
     }
@@ -346,10 +352,19 @@ const Landing = () => {
             <div className="flex flex-wrap items-center justify-center gap-8">
               <div className="flex items-center gap-3">
                 <div className="flex -space-x-2">
-                  {['MS', 'JM', 'AC', 'PO', 'RF'].map((initial, i) => (
-                    <div key={i} className="w-10 h-10 rounded-full bg-white border-2 border-primary flex items-center justify-center text-primary text-xs font-bold shadow-lg hover:scale-110 transition-transform">
-                      {initial}
-                    </div>
+                  {[
+                    '/testimonials/Foto do clientes/Screenshot_34.png',
+                    '/testimonials/Foto do clientes/Screenshot_35.png',
+                    '/testimonials/Foto do clientes/Screenshot_36.png',
+                    '/testimonials/Foto do clientes/Screenshot_37.png',
+                    '/testimonials/Foto do clientes/Screenshot_38.png'
+                  ].map((photo, i) => (
+                    <img
+                      key={i}
+                      src={photo}
+                      alt={`Cliente ${i + 1}`}
+                      className="w-12 h-12 rounded-full border-2 border-white object-cover shadow-lg hover:scale-110 transition-transform cursor-pointer"
+                    />
                   ))}
                 </div>
                 <span className="text-white font-medium text-lg">+10.000 empreendedores confiam no LucroFácil</span>
@@ -792,9 +807,11 @@ const Landing = () => {
                         </div>
                         <div className="text-muted-foreground mb-5">{testimonial.text}</div>
                         <div className="flex items-center gap-2">
-                          <div className="w-10 h-10 bg-gradient-to-r from-primary to-accent rounded-full flex items-center justify-center text-white font-semibold">
-                            {testimonial.avatar}
-                          </div>
+                          <img 
+                            src={testimonial.image} 
+                            alt={testimonial.name}
+                            className="w-12 h-12 rounded-full object-cover border-2 border-primary/20 shadow-md"
+                          />
                           <div className="flex flex-col">
                             <div className="font-medium tracking-tight leading-5 text-foreground">{testimonial.name}</div>
                             <div className="leading-5 opacity-60 tracking-tight text-muted-foreground text-sm">{testimonial.business}</div>
@@ -832,9 +849,11 @@ const Landing = () => {
                         </div>
                         <div className="text-muted-foreground mb-5">{testimonial.text}</div>
                         <div className="flex items-center gap-2">
-                          <div className="w-10 h-10 bg-gradient-to-r from-primary to-accent rounded-full flex items-center justify-center text-white font-semibold">
-                            {testimonial.avatar}
-                          </div>
+                          <img 
+                            src={testimonial.image} 
+                            alt={testimonial.name}
+                            className="w-12 h-12 rounded-full object-cover border-2 border-primary/20 shadow-md"
+                          />
                           <div className="flex flex-col">
                             <div className="font-medium tracking-tight leading-5 text-foreground">{testimonial.name}</div>
                             <div className="leading-5 opacity-60 tracking-tight text-muted-foreground text-sm">{testimonial.business}</div>
@@ -872,9 +891,11 @@ const Landing = () => {
                         </div>
                         <div className="text-muted-foreground mb-5">{testimonial.text}</div>
                         <div className="flex items-center gap-2">
-                          <div className="w-10 h-10 bg-gradient-to-r from-primary to-accent rounded-full flex items-center justify-center text-white font-semibold">
-                            {testimonial.avatar}
-                          </div>
+                          <img 
+                            src={testimonial.image} 
+                            alt={testimonial.name}
+                            className="w-12 h-12 rounded-full object-cover border-2 border-primary/20 shadow-md"
+                          />
                           <div className="flex flex-col">
                             <div className="font-medium tracking-tight leading-5 text-foreground">{testimonial.name}</div>
                             <div className="leading-5 opacity-60 tracking-tight text-muted-foreground text-sm">{testimonial.business}</div>
