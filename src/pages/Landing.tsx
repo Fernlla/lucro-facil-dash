@@ -11,6 +11,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Pricing } from '@/components/ui/pricing';
 
 const Landing = () => {
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
@@ -675,96 +676,8 @@ const Landing = () => {
         </div>
       </section>
 
-      {/* Pricing Section - Simplified */}
-      <section id="pricing" className="py-20 bg-background">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-5xl font-bold mb-6 text-foreground">
-              Potencialize seu negócio com o<br className="hidden md:block" />
-              <span className="text-primary">Centro de Extensões</span> do LucroFácil
-            </h2>
-            <p className="text-xl max-w-3xl mx-auto text-muted-foreground">
-              Comece grátis por 14 dias e tenha acesso a todos os recursos. Sem cartão de crédito.
-            </p>
-          </div>
-
-          <div className="max-w-4xl mx-auto">
-            <Card className="relative p-8 md:p-12 shadow-2xl border-2 border-primary/20 bg-gradient-to-br from-background to-primary/5">
-              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                <Badge className="bg-gradient-to-r from-primary to-accent text-white px-6 py-2 text-base font-semibold shadow-lg">
-                  Plano Recomendado
-                </Badge>
-              </div>
-
-              <div className="text-center mb-8">
-                <h3 className="text-3xl font-bold mb-3 text-foreground">
-                  Professional
-                </h3>
-                <div className="flex items-baseline justify-center mb-4">
-                  <span className="text-6xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-                    R$ 39,90
-                  </span>
-                  <span className="text-2xl ml-2 text-muted-foreground">
-                    /mês
-                  </span>
-                </div>
-                <p className="text-lg text-muted-foreground">
-                  Tudo que você precisa para crescer seu negócio
-                </p>
-              </div>
-
-              <div className="grid md:grid-cols-2 gap-4 mb-8">
-                {[
-                  'Produtos ilimitados',
-                  'Controle avançado de vendas',
-                  'Relatórios em tempo real',
-                  'Assistente IA completo',
-                  'Suporte prioritário',
-                  'Integração com APIs',
-                  'Backup automático',
-                  'Multi-usuários'
-                ].map((feature, index) => (
-                  <div key={index} className="flex items-center gap-3">
-                    <div className="w-6 h-6 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
-                      <Check className="w-4 h-4 text-primary" />
-                    </div>
-                    <span className="text-foreground font-medium">{feature}</span>
-                  </div>
-                ))}
-              </div>
-
-              <div className="space-y-3">
-                <Button 
-                  size="lg"
-                  className="w-full bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 text-lg py-6 shadow-lg hover:shadow-xl"
-                  onClick={() => window.location.href = '/auth'}
-                >
-                  Começar teste grátis de 14 dias
-                  <ArrowRight className="ml-2 w-5 h-5" />
-                </Button>
-                <p className="text-center text-sm text-muted-foreground">
-                  Sem compromisso • Cancele quando quiser • Sem cartão de crédito
-                </p>
-              </div>
-            </Card>
-
-            <div className="mt-12 text-center">
-              <p className="text-muted-foreground mb-6">
-                Precisa de um plano personalizado para sua empresa?
-              </p>
-              <Button 
-                size="lg"
-                variant="outline"
-                className="border-2"
-                onClick={() => window.location.href = '/auth'}
-              >
-                <Headphones className="mr-2 w-5 h-5" />
-                Falar com vendas
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Pricing Section - Advanced with Animations */}
+      <Pricing />
 
       {/* Testimonials Section - Animated Infinite Scroll */}
       <section id="testimonials" className="py-20 bg-muted/30 overflow-hidden">
