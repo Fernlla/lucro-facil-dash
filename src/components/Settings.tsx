@@ -1,12 +1,20 @@
-import { Bell, Lock, Globe, CreditCard, Shield, Database, Trash2, Download } from 'lucide-react';
+import { Bell, Lock, Globe, CreditCard, Shield, Database, Trash2, Download, Sun, Moon, Monitor } from 'lucide-react';
 
 interface SettingsProps {
   theme: 'light' | 'dark';
   onClose: () => void;
+  onThemeChange?: (theme: 'light' | 'dark' | 'system') => void;
+  currentTheme?: 'light' | 'dark' | 'system';
 }
 
-export default function Settings({ theme, onClose }: SettingsProps) {
+export default function Settings({ theme, onClose, onThemeChange, currentTheme = 'light' }: SettingsProps) {
   const isDark = theme === 'dark';
+
+  const themeOptions = [
+    { value: 'light' as const, icon: Sun, label: 'Claro', description: 'Tema claro para ambientes bem iluminados' },
+    { value: 'dark' as const, icon: Moon, label: 'Escuro', description: 'Tema escuro para reduzir o cansaço visual' },
+    { value: 'system' as const, icon: Monitor, label: 'Sistema', description: 'Seguir as preferências do sistema' }
+  ];
 
   const sections = [
     {
@@ -58,6 +66,68 @@ export default function Settings({ theme, onClose }: SettingsProps) {
         </div>
 
         <div className="space-y-4">
+          {/* Seção de Tema */}
+          <div className={`rounded-2xl p-6 ${isDark ? 'bg-slate-800 border border-slate-700' : 'bg-white border border-gray-200'}`}>
+            <div className="flex items-center gap-3 mb-4">
+              <div className={`p-2 rounded-lg ${isDark ? 'bg-blue-900/30' : 'bg-blue-100'}`}>
+                <Sun size={20} className="text-blue-600" />
+              </div>
+              <h2 className={`text-lg font-semibold ${isDark ? 'text-slate-100' : 'text-gray-900'}`}>
+                Tema da Interface
+              </h2>
+            </div>
+            <p className={`text-sm mb-4 ${isDark ? 'text-slate-400' : 'text-gray-600'}`}>
+              Escolha como deseja visualizar a interface do LucroFácil
+            </p>
+            
+            <div className="space-y-2">
+              {themeOptions.map((option) => {
+                const Icon = option.icon;
+                const isSelected = currentTheme === option.value;
+                return (
+                  <button
+                    key={option.value}
+                    onClick={() => onThemeChange?.(option.value)}
+                    className={`w-full p-4 rounded-xl border-2 transition-all text-left ${
+                      isSelected
+                        ? isDark
+                          ? 'border-blue-500 bg-blue-500/10'
+                          : 'border-blue-500 bg-blue-50'
+                        : isDark
+                          ? 'border-slate-700 hover:border-slate-600'
+                          : 'border-gray-200 hover:border-gray-300'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className={`p-2 rounded-lg ${
+                        isSelected
+                          ? 'bg-blue-600 text-white'
+                          : isDark
+                            ? 'bg-slate-700 text-slate-300'
+                            : 'bg-gray-100 text-gray-600'
+                      }`}>
+                        <Icon size={20} />
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2">
+                          <h3 className={`font-semibold ${isDark ? 'text-slate-100' : 'text-gray-900'}`}>
+                            {option.label}
+                          </h3>
+                          {isSelected && (
+                            <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
+                          )}
+                        </div>
+                        <p className={`text-xs ${isDark ? 'text-slate-400' : 'text-gray-600'}`}>
+                          {option.description}
+                        </p>
+                      </div>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
           {sections.map((section) => (
             <div
               key={section.title}

@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import { 
   Plus, TrendingUp, DollarSign, Package, Bell, BarChart3, 
-  Home, Moon, Sun, Monitor, ChevronRight, 
+  Home, 
   ArrowUp, ArrowDown, Target,
-  ShoppingBag, Download, X, Check, Menu, User, HelpCircle, Settings as SettingsIcon, Bot, LogOut
+  ShoppingBag, Download, X, Menu, User, HelpCircle, Settings as SettingsIcon, Bot, LogOut
 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { AnimatedSidebar, AnimatedSidebarBody, AnimatedSidebarLink } from '@/components/ui/animated-sidebar';
@@ -45,6 +46,8 @@ interface NewSale {
   customPrice: string;
 }
 
+type PageType = 'dashboard' | 'profile' | 'settings' | 'products' | 'notifications' | 'help' | 'auth' | 'assistant' | 'sales';
+
 const Index = () => {
   const { user, isAuthenticated, logout } = useAuth();
   
@@ -60,19 +63,15 @@ const Index = () => {
     (localStorage.getItem('lucrofacil_theme') as 'light' | 'dark' | 'system') || 'light'
   );
   const [activeTheme, setActiveTheme] = useState<'light' | 'dark'>('light');
-  type PageType = 'dashboard' | 'profile' | 'settings' | 'products' | 'notifications' | 'help' | 'auth' | 'assistant' | 'sales';
   
   const [activeTab, setActiveTab] = useState('dashboard');
-  const [showThemeMenu, setShowThemeMenu] = useState(false);
   const [showNewSaleModal, setShowNewSaleModal] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
-  const [showUserMenu, setShowUserMenu] = useState(false);
   const [currentPage, setCurrentPage] = useState<PageType>('dashboard');
   
   const handleLogout = () => {
     logout();
     setCurrentPage('auth');
-    setShowUserMenu(false);
   };
 
   const handleDeleteSale = (id: number) => {
@@ -184,33 +183,6 @@ const Index = () => {
     setNewSale({ productId: '', quantity: 1, customPrice: '' });
     setShowNewSaleModal(false);
   };
-
-  const ThemeSelector = () => (
-    <div className="absolute right-0 mt-2 w-48 rounded-lg shadow-lg bg-popover border border-border overflow-hidden z-50">
-      {[
-        { value: 'light' as const, icon: Sun, label: 'Claro' },
-        { value: 'dark' as const, icon: Moon, label: 'Escuro' },
-        { value: 'system' as const, icon: Monitor, label: 'Sistema' }
-      ].map(({ value, icon: Icon, label }) => (
-        <button
-          key={value}
-          onClick={() => {
-            setTheme(value);
-            setShowThemeMenu(false);
-          }}
-          className={`w-full px-4 py-3 flex items-center justify-between hover:bg-accent hover:text-accent-foreground transition-colors ${
-            theme === value ? 'bg-accent text-accent-foreground' : ''
-          }`}
-        >
-          <div className="flex items-center">
-            <Icon className="w-4 h-4 mr-3" />
-            <span className="text-sm">{label}</span>
-          </div>
-          {theme === value && <Check className="w-4 h-4 text-primary" />}
-        </button>
-      ))}
-    </div>
-  );
 
   const NewSaleModal = () => (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
@@ -777,7 +749,7 @@ const Index = () => {
   }
 
   if (currentPage === 'settings') {
-    return <Settings theme={activeTheme} onClose={() => setCurrentPage('dashboard')} />;
+    return <Settings theme={activeTheme} onClose={() => setCurrentPage('dashboard')} onThemeChange={setTheme} currentTheme={theme} />;
   }
 
   if (currentPage === 'products') {
@@ -806,123 +778,27 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background transition-colors duration-200">
-      {/* Header moderno */}
-      <header className="sticky top-0 z-50 w-full border-b-2 border-border bg-card shadow-sm">
-        <div className="flex h-16 items-center px-4 lg:px-6">
-          <div className="mr-4 hidden md:flex">
-            <div className="bg-gradient-to-r from-primary to-accent w-8 h-8 rounded-lg flex items-center justify-center mr-3 shadow-sm">
-              <DollarSign className="w-5 h-5 text-white" />
-            </div>
-            <span className="hidden font-bold sm:inline-block">LucroFácil</span>
-          </div>
-          
-          <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
-            <div className="w-full flex-1 md:w-auto md:flex-none md:hidden">
-              <div className="flex items-center space-x-2">
-                <button
-                  onClick={() => setShowMobileMenu(!showMobileMenu)}
-                  className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2"
-                >
-                  <Menu className="h-4 w-4" />
-                  <span className="ml-2">Menu</span>
-                </button>
-              </div>
-            </div>
-            
-            <nav className="flex items-center space-x-2">
-              <div className="relative">
-                <button 
-                  onClick={() => setShowThemeMenu(!showThemeMenu)}
-                  className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10"
-                >
-                  {theme === 'dark' ? (
-                    <Moon className="h-4 w-4" />
-                  ) : theme === 'light' ? (
-                    <Sun className="h-4 w-4" />
-                  ) : (
-                    <Monitor className="h-4 w-4" />
-                  )}
-                </button>
-                {showThemeMenu && <ThemeSelector />}
-              </div>
-
-              <button 
-                onClick={() => setCurrentPage('notifications')}
-                className="relative inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10"
-              >
-                <Bell className="h-4 w-4" />
-                <span className="absolute -top-1 -right-1 h-3 w-3 bg-destructive rounded-full"></span>
-              </button>
-
-              <div className="relative">
-                <button
-                  onClick={() => setShowUserMenu(!showUserMenu)}
-                  className="relative inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10 rounded-full"
-                >
-                  {user?.avatar ? (
-                    <img src={user.avatar} alt={user.name} className="w-8 h-8 rounded-full" />
-                  ) : (
-                    <User className="h-4 w-4" />
-                  )}
-                </button>
-                {showUserMenu && (
-                  <div className="absolute right-0 mt-2 w-56 rounded-lg shadow-lg bg-popover border border-border overflow-hidden z-50">
-                    <div className="px-4 py-3 border-b border-border">
-                      <p className="text-sm font-medium">{user?.name || 'Usuário'}</p>
-                      <p className="text-xs text-muted-foreground truncate">{user?.email || ''}</p>
-                    </div>
-                    <button
-                      onClick={() => {
-                        setCurrentPage('profile');
-                        setShowUserMenu(false);
-                      }}
-                      className="w-full px-4 py-2 flex items-center gap-3 hover:bg-accent hover:text-accent-foreground transition-colors text-left"
-                    >
-                      <User className="h-4 w-4" />
-                      <span className="text-sm">Meu Perfil</span>
-                    </button>
-                    <button
-                      onClick={() => {
-                        setCurrentPage('settings');
-                        setShowUserMenu(false);
-                      }}
-                      className="w-full px-4 py-2 flex items-center gap-3 hover:bg-accent hover:text-accent-foreground transition-colors text-left"
-                    >
-                      <SettingsIcon className="h-4 w-4" />
-                      <span className="text-sm">Configurações</span>
-                    </button>
-                    <div className="border-t border-border">
-                      <button
-                        onClick={handleLogout}
-                        className="w-full px-4 py-2 flex items-center gap-3 hover:bg-destructive/10 hover:text-destructive transition-colors text-left text-destructive"
-                      >
-                        <LogOut className="h-4 w-4" />
-                        <span className="text-sm">Sair</span>
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </nav>
-          </div>
-        </div>
-      </header>
-
       <div className="flex flex-1">
         {/* Sidebar animada */}
         <AnimatedSidebar animate={true}>
-          <AnimatedSidebarBody className="justify-between gap-10">
+          <AnimatedSidebarBody className="justify-between gap-6">
             <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
               {/* Logo */}
-              <div className="flex items-center space-x-2 mb-8">
-                <div className="bg-gradient-to-r from-primary to-accent w-8 h-8 rounded-lg flex items-center justify-center shadow-sm">
-                  <DollarSign className="w-5 h-5 text-white" />
+              <div className="flex items-center space-x-2 mb-6">
+                <div className="bg-gradient-to-r from-primary to-accent w-7 h-7 rounded-lg flex items-center justify-center shadow-sm">
+                  <DollarSign className="w-4 h-4 text-white" />
                 </div>
-                <span className="font-bold text-foreground whitespace-nowrap">LucroFácil</span>
+                <motion.span 
+                  className="font-bold text-sm text-foreground whitespace-nowrap"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                >
+                  LucroFácil
+                </motion.span>
               </div>
               
-              {/* Links principais */}
-              <div className="flex flex-col gap-2">
+              {/* Menu items principais */}
+              <div className="flex flex-col gap-1.5">
                 {[
                   { id: 'dashboard', label: 'Dashboard', icon: <Home className="h-5 w-5 text-foreground flex-shrink-0" />, action: () => setCurrentPage('dashboard') },
                   { id: 'products', label: 'Produtos', icon: <Package className="h-5 w-5 text-foreground flex-shrink-0" />, action: () => setCurrentPage('products') },
@@ -947,11 +823,8 @@ const Index = () => {
               </div>
               
               {/* Ferramentas */}
-              <div className="mt-4 pt-4 border-t border-border">
-                <p className="px-2 mb-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                  Ferramentas
-                </p>
-                <div className="flex flex-col gap-2">
+              <div className="mt-3 pt-3 border-t border-border">
+                <div className="flex flex-col gap-1.5">
                   <AnimatedSidebarLink
                     link={{
                       label: 'Assistente IA',
@@ -961,7 +834,23 @@ const Index = () => {
                         setShowMobileMenu(false);
                       }
                     }}
-                    className={currentPage === 'assistant' ? 'bg-accent text-accent-foreground' : ''}
+                    className={(currentPage as PageType) === 'assistant' ? 'bg-accent text-accent-foreground' : ''}
+                  />
+                  <AnimatedSidebarLink
+                    link={{
+                      label: 'Notificações',
+                      icon: (
+                        <div className="relative">
+                          <Bell className="h-5 w-5 text-foreground flex-shrink-0" />
+                          <span className="absolute -top-1 -right-1 h-2 w-2 bg-destructive rounded-full"></span>
+                        </div>
+                      ),
+                      onClick: () => {
+                        setCurrentPage('notifications');
+                        setShowMobileMenu(false);
+                      }
+                    }}
+                    className={(currentPage as PageType) === 'notifications' ? 'bg-accent text-accent-foreground' : ''}
                   />
                   <AnimatedSidebarLink
                     link={{
@@ -972,6 +861,7 @@ const Index = () => {
                         setShowMobileMenu(false);
                       }
                     }}
+                    className={(currentPage as PageType) === 'settings' ? 'bg-accent text-accent-foreground' : ''}
                   />
                   <AnimatedSidebarLink
                     link={{
@@ -982,24 +872,39 @@ const Index = () => {
                         setShowMobileMenu(false);
                       }
                     }}
+                    className={(currentPage as PageType) === 'help' ? 'bg-accent text-accent-foreground' : ''}
                   />
                 </div>
               </div>
             </div>
             
-            {/* User profile at bottom */}
-            <div>
-              <AnimatedSidebarLink
-                link={{
-                  label: user?.name || 'Usuário',
-                  icon: user?.avatar ? (
-                    <img src={user.avatar} className="h-7 w-7 flex-shrink-0 rounded-full" alt="Avatar" />
-                  ) : (
-                    <User className="h-5 w-5 text-foreground flex-shrink-0" />
-                  ),
-                  onClick: () => setCurrentPage('profile')
-                }}
-              />
+            {/* Parte inferior: Perfil e Sair */}
+            <div className="border-t border-border pt-2">
+              <div className="flex flex-col gap-1.5">
+                <AnimatedSidebarLink
+                  link={{
+                    label: user?.name || 'Perfil',
+                    icon: user?.avatar ? (
+                      <img src={user.avatar} className="h-5 w-5 flex-shrink-0 rounded-full" alt="Avatar" />
+                    ) : (
+                      <User className="h-5 w-5 text-foreground flex-shrink-0" />
+                    ),
+                    onClick: () => {
+                      setCurrentPage('profile');
+                      setShowMobileMenu(false);
+                    }
+                  }}
+                  className={(currentPage as PageType) === 'profile' ? 'bg-accent text-accent-foreground' : ''}
+                />
+                <AnimatedSidebarLink
+                  link={{
+                    label: 'Sair',
+                    icon: <LogOut className="h-5 w-5 text-destructive flex-shrink-0" />,
+                    onClick: handleLogout
+                  }}
+                  className="text-destructive hover:bg-destructive/10"
+                />
+              </div>
             </div>
           </AnimatedSidebarBody>
         </AnimatedSidebar>
@@ -1086,7 +991,7 @@ const Index = () => {
                   setShowMobileMenu(false);
                 }}
                 className={`flex items-center gap-3 rounded-lg px-3 py-2 text-left text-sm transition-all hover:bg-accent hover:text-accent-foreground w-full ${
-                  currentPage === 'assistant'
+                  (currentPage as PageType) === 'assistant'
                     ? 'bg-accent text-accent-foreground' 
                     : 'text-muted-foreground'
                 }`}
@@ -1119,7 +1024,7 @@ const Index = () => {
           <button
             onClick={() => setCurrentPage('products')}
             className={`flex flex-col items-center justify-center py-2 px-1 rounded-lg transition-colors ${
-              currentPage === 'products'
+              (currentPage as PageType) === 'products'
                 ? 'bg-primary/10 text-primary'
                 : 'text-muted-foreground hover:text-foreground hover:bg-accent'
             }`}
@@ -1141,7 +1046,7 @@ const Index = () => {
           <button
             onClick={() => setCurrentPage('sales')}
             className={`flex flex-col items-center justify-center py-2 px-1 rounded-lg transition-colors ${
-              currentPage === 'sales'
+              (currentPage as PageType) === 'sales'
                 ? 'bg-primary/10 text-primary'
                 : 'text-muted-foreground hover:text-foreground hover:bg-accent'
             }`}
@@ -1153,7 +1058,7 @@ const Index = () => {
           <button
             onClick={() => setCurrentPage('assistant')}
             className={`flex flex-col items-center justify-center py-2 px-1 rounded-lg transition-colors ${
-              currentPage === 'assistant'
+              (currentPage as PageType) === 'assistant'
                 ? 'bg-primary/10 text-primary'
                 : 'text-muted-foreground hover:text-foreground hover:bg-accent'
             }`}

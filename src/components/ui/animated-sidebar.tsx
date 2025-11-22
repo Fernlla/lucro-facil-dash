@@ -90,11 +90,11 @@ export const DesktopSidebar = ({
   return (
     <motion.div
       className={cn(
-        "h-full px-4 py-4 hidden md:flex md:flex-col bg-card dark:bg-neutral-800 w-[260px] flex-shrink-0 border-r-2 border-border shadow-sm",
+        "h-screen px-3 py-4 hidden md:flex md:flex-col bg-card dark:bg-neutral-800 w-[220px] flex-shrink-0 border-r-2 border-border shadow-sm sticky top-0",
         className
       )}
       animate={{
-        width: animate ? (open ? "260px" : "60px") : "260px",
+        width: animate ? (open ? "220px" : "60px") : "220px",
       }}
       onMouseEnter={() => setOpen(true)}
       onMouseLeave={() => setOpen(false)}
@@ -180,7 +180,7 @@ export const AnimatedSidebarLink = ({
           display: animate ? (open ? "inline-block" : "none") : "inline-block",
           opacity: animate ? (open ? 1 : 0) : 1,
         }}
-        className="text-muted-foreground dark:text-neutral-200 text-sm group-hover/sidebar:translate-x-1 transition duration-150 whitespace-pre inline-block !p-0 !m-0"
+        className="text-muted-foreground dark:text-neutral-200 text-[13px] group-hover/sidebar:translate-x-1 transition duration-150 whitespace-pre inline-block !p-0 !m-0"
       >
         {link.label}
       </motion.span>
@@ -192,7 +192,7 @@ export const AnimatedSidebarLink = ({
       <button
         onClick={handleClick}
         className={cn(
-          "flex items-center justify-start gap-2 group/sidebar py-2 w-full text-left hover:bg-accent hover:text-accent-foreground rounded-lg px-2 transition-colors",
+          "flex items-center justify-start gap-2.5 group/sidebar py-1.5 w-full text-left hover:bg-accent hover:text-accent-foreground rounded-lg px-2 transition-colors",
           className
         )}
         {...props}
@@ -206,7 +206,7 @@ export const AnimatedSidebarLink = ({
     <a
       href={link.href}
       className={cn(
-        "flex items-center justify-start gap-2 group/sidebar py-2 hover:bg-accent hover:text-accent-foreground rounded-lg px-2 transition-colors",
+        "flex items-center justify-start gap-2.5 group/sidebar py-1.5 hover:bg-accent hover:text-accent-foreground rounded-lg px-2 transition-colors",
         className
       )}
       {...props}
