@@ -6,7 +6,8 @@ import {
   Smartphone, Monitor, Globe, Heart, Sparkles,
   Menu, X, ChevronDown, ArrowUpRight, UserPlus, TrendingDown,
   CreditCard, Brain, PieChart, Smartphone as Phone, Lock,
-  Headphones, Rocket, CheckCircle, Star as StarIcon, Package, Plus
+  Headphones, Rocket, CheckCircle, Star as StarIcon, Package, Plus,
+  BookOpen, ChevronRight
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -681,6 +682,128 @@ const Landing = () => {
         </div>
       </section>
 
+      {/* Blog Preview Section */}
+      <section className="py-20 bg-background">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <Badge variant="outline" className="mb-4 bg-primary/5 border-primary/20 text-primary">
+              <BookOpen className="w-4 h-4 mr-2" />
+              Blog LucroFácil
+            </Badge>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-foreground">
+              Aprenda a <span className="text-primary">precificar</span> e gerenciar seu negócio
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
+              Guias práticos sobre precificação, custos e gestão para diversos tipos de negócios
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8 mb-8">
+            <Card 
+              className="overflow-hidden cursor-pointer hover:shadow-xl transition-all duration-300 border-border/50 hover:border-primary/30 group"
+              onClick={() => window.location.href = '/blog/precificacao-sorveteria'}
+            >
+              <div className="relative h-48 overflow-hidden">
+                <img 
+                  src="https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=800&h=400&fit=crop" 
+                  alt="Precificação Sorveteria"
+                  className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
+                />
+                <div className="absolute top-3 left-3">
+                  <Badge className="bg-gradient-to-r from-primary to-accent text-white">
+                    Sorveteria
+                  </Badge>
+                </div>
+              </div>
+              <CardContent className="p-6">
+                <h3 className="text-xl font-bold mb-2 text-foreground group-hover:text-primary transition-colors">
+                  Como Precificar Produtos para Sorveteria
+                </h3>
+                <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
+                  Aprenda a calcular o preço ideal dos seus sorvetes, picolés e açaí considerando custos e margem.
+                </p>
+                <div className="flex items-center text-primary font-medium text-sm">
+                  Ler artigo
+                  <ChevronRight className="w-4 h-4 ml-1" />
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card 
+              className="overflow-hidden cursor-pointer hover:shadow-xl transition-all duration-300 border-border/50 hover:border-primary/30 group"
+              onClick={() => window.location.href = '/blog/precificacao-costura'}
+            >
+              <div className="relative h-48 overflow-hidden">
+                <img 
+                  src="https://images.unsplash.com/photo-1558769132-cb1aea1f5d2b?w=800&h=400&fit=crop" 
+                  alt="Precificação Costura"
+                  className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
+                />
+                <div className="absolute top-3 left-3">
+                  <Badge className="bg-gradient-to-r from-primary to-accent text-white">
+                    Costura
+                  </Badge>
+                </div>
+              </div>
+              <CardContent className="p-6">
+                <h3 className="text-xl font-bold mb-2 text-foreground group-hover:text-primary transition-colors">
+                  Precificação em Confecção e Costura
+                </h3>
+                <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
+                  Descubra como calcular corretamente o valor do seu trabalho manual, incluindo materiais e tempo.
+                </p>
+                <div className="flex items-center text-primary font-medium text-sm">
+                  Ler artigo
+                  <ChevronRight className="w-4 h-4 ml-1" />
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card 
+              className="overflow-hidden cursor-pointer hover:shadow-xl transition-all duration-300 border-border/50 hover:border-primary/30 group"
+              onClick={() => window.location.href = '/blog/precificacao-cafeteria'}
+            >
+              <div className="relative h-48 overflow-hidden">
+                <img 
+                  src="https://images.unsplash.com/photo-1511920170033-f8396924c348?w=800&h=400&fit=crop" 
+                  alt="Precificação Cafeteria"
+                  className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
+                />
+                <div className="absolute top-3 left-3">
+                  <Badge className="bg-gradient-to-r from-primary to-accent text-white">
+                    Cafeteria
+                  </Badge>
+                </div>
+              </div>
+              <CardContent className="p-6">
+                <h3 className="text-xl font-bold mb-2 text-foreground group-hover:text-primary transition-colors">
+                  Como Precificar Bebidas em Cafeterias
+                </h3>
+                <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
+                  Estratégias de precificação para cafés e bebidas especiais mantendo lucratividade.
+                </p>
+                <div className="flex items-center text-primary font-medium text-sm">
+                  Ler artigo
+                  <ChevronRight className="w-4 h-4 ml-1" />
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="text-center">
+            <Button 
+              size="lg" 
+              variant="outline"
+              className="border-2"
+              onClick={() => window.location.href = '/blog'}
+            >
+              Ver todos os artigos
+              <ArrowRight className="ml-2 w-4 h-4" />
+            </Button>
+          </div>
+        </div>
+      </section>
+
       {/* Help Section - Recursos para Empreendedores */}
       <section className="py-20 bg-muted/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -793,12 +916,12 @@ const Landing = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-5 gap-8 mb-12">
             <div className="md:col-span-2">
-              <div className="flex items-center mb-4">
+              <a href="/" className="flex items-center mb-4 w-fit cursor-pointer hover:opacity-80 transition-opacity">
                 <div className="bg-gradient-to-r from-primary to-accent w-10 h-10 rounded-2xl flex items-center justify-center mr-3 shadow-lg">
                   <DollarSign className="w-6 h-6 text-white" />
                 </div>
                 <span className="text-2xl font-bold text-foreground">LucroFácil</span>
-              </div>
+              </a>
               <p className="text-muted-foreground mb-6 max-w-sm">
                 A solução completa para gestão de pequenos negócios. Controle vendas, estoque e finanças em um só lugar.
               </p>
@@ -821,7 +944,7 @@ const Landing = () => {
                 <li><a href="#features" className="hover:text-primary transition-colors">Recursos</a></li>
                 <li><a href="#pricing" className="hover:text-primary transition-colors">Preços</a></li>
                 <li><a href="#demo" className="hover:text-primary transition-colors">Demonstração</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">Integrações</a></li>
+                <li><a href="/blog" className="hover:text-primary transition-colors">Blog</a></li>
               </ul>
             </div>
             

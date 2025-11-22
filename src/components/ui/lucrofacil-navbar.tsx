@@ -48,19 +48,19 @@ export function LucroFacilNavbar() {
   }, [isOpen]);
 
   const logoElement = (
-    <div className="flex items-center gap-2">
+    <a href="/" className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity">
       <div className="bg-gradient-to-r from-[#10B981] to-[#3B82F6] w-8 h-8 rounded-xl flex items-center justify-center shadow-lg">
         <DollarSign className="w-5 h-5 text-white" />
       </div>
       <span className="text-white font-bold text-lg hidden sm:block">LucroFácil</span>
-    </div>
+    </a>
   );
 
   const navLinksData = [
     { label: 'Recursos', href: '#features' },
     { label: 'Preços', href: '#pricing' },
     { label: 'Depoimentos', href: '#testimonials' },
-    { label: 'Blog', href: '#blog' },
+    { label: 'Blog', href: '/blog' },
   ];
 
   const loginButtonElement = (
