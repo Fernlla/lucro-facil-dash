@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
-import PaginaDeVenda from "./pages/PaginaDeVenda";
+import PaginaDeVenda from "./pages/Paginadevenda";
 import Dashboard from "./pages/Dashboard";
 import AuthPage from "./pages/AuthPage";
 import Blog from "./pages/Blog";
