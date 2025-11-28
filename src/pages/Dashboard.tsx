@@ -254,21 +254,24 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-background transition-colors duration-200">
       <div className="flex flex-1">
-        <DashboardSidebar
-          user={user}
-          currentPage={currentPage}
-          setCurrentPage={setCurrentPage}
-          setActiveTab={setActiveTab}
-          activeTab={activeTab}
-          handleLogout={handleLogout}
-          setShowMobileMenu={setShowMobileMenu}
-        />
+        {/* Sidebar visível apenas em desktop (md+) */}
+        <div className="hidden md:block">
+          <DashboardSidebar
+            user={user}
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+            setActiveTab={setActiveTab}
+            activeTab={activeTab}
+            handleLogout={handleLogout}
+            setShowMobileMenu={setShowMobileMenu}
+          />
+        </div>
 
-        <main className="flex flex-1 flex-col bg-muted/30">
+        <main className="flex flex-1 flex-col bg-muted/30 w-full">
           <DashboardHeader setShowNewSaleModal={setShowNewSaleModal} />
           
-          <div className="flex-1 p-3 md:p-4 lg:p-6 pb-20 md:pb-4">
-            <div className="space-y-6 md:space-y-8">
+          <div className="flex-1 p-4 md:p-6 lg:p-8 pb-24 md:pb-6">
+            <div className="space-y-4 md:space-y-6 lg:space-y-8 max-w-7xl mx-auto">
               <MetricsCards
                 totalRevenue={totalRevenue}
                 totalCosts={totalCosts}

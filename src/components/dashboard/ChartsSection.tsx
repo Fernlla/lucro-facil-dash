@@ -9,17 +9,15 @@ interface ChartsSectionProps {
 
 export default function ChartsSection({ chartData, productsData, isMobile }: ChartsSectionProps) {
   return (
-    <div className="grid gap-3 md:gap-4 md:grid-cols-2">
-      <Card className="border-2 shadow-md">
+    <div className="grid gap-4 md:gap-6 lg:grid-cols-2">
+      <Card className="border-2 shadow-md overflow-hidden">
         <div className="p-4 md:p-6">
-          <div className="flex items-center justify-between mb-4 md:mb-6">
-            <div>
-              <h3 className="text-base md:text-lg font-semibold">Faturamento e Lucro (7 dias)</h3>
-              <p className="text-xs md:text-sm text-muted-foreground">Evolução diária do seu negócio</p>
-            </div>
+          <div className="mb-4">
+            <h3 className="text-base md:text-lg font-semibold">Faturamento e Lucro (7 dias)</h3>
+            <p className="text-xs md:text-sm text-muted-foreground mt-1">Evolução diária do seu negócio</p>
           </div>
           
-          <ResponsiveContainer width="100%" height={isMobile ? 240 : 300}>
+          <ResponsiveContainer width="100%" height={isMobile ? 200 : 280}>
             <LineChart data={chartData}>
               <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
               <XAxis 
@@ -62,16 +60,14 @@ export default function ChartsSection({ chartData, productsData, isMobile }: Cha
         </div>
       </Card>
 
-      <Card className="border-2 shadow-md">
+      <Card className="border-2 shadow-md overflow-hidden">
         <div className="p-4 md:p-6">
-          <div className="flex items-center justify-between mb-4 md:mb-6">
-            <div>
-              <h3 className="text-base md:text-lg font-semibold">Top 5 Produtos</h3>
-              <p className="text-xs md:text-sm text-muted-foreground">Mais vendidos do período</p>
-            </div>
+          <div className="mb-4">
+            <h3 className="text-base md:text-lg font-semibold">Top 5 Produtos</h3>
+            <p className="text-xs md:text-sm text-muted-foreground mt-1">Mais vendidos do período</p>
           </div>
           
-          <ResponsiveContainer width="100%" height={isMobile ? 240 : 300}>
+          <ResponsiveContainer width="100%" height={isMobile ? 200 : 280}>
             <BarChart data={productsData}>
               <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
               <XAxis 

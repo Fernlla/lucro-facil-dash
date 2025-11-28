@@ -3,17 +3,18 @@ import { Button } from '@/components/ui/button';
 
 type PageType = 'dashboard' | 'profile' | 'settings' | 'products' | 'notifications' | 'help' | 'auth' | 'assistant' | 'sales';
 
-interface QuickActionsProps {
+interface MobileQuickActionsProps {
   setShowNewSaleModal: (show: boolean) => void;
   setCurrentPage: (page: PageType) => void;
 }
 
-export default function QuickActions({ setShowNewSaleModal, setCurrentPage }: QuickActionsProps) {
+const MobileQuickActions = ({ setShowNewSaleModal, setCurrentPage }: MobileQuickActionsProps) => {
   const actions = [
     {
       label: 'Nova Venda',
       icon: Plus,
-      onClick: () => setShowNewSaleModal(true)
+      onClick: () => setShowNewSaleModal(true),
+      primary: true
     },
     {
       label: 'Relatório',
@@ -33,18 +34,24 @@ export default function QuickActions({ setShowNewSaleModal, setCurrentPage }: Qu
   ];
 
   return (
-    <div className="grid grid-cols-2 gap-3 md:gap-4 lg:grid-cols-4">
+    <div className="md:hidden grid grid-cols-2 gap-3">
       {actions.map((action, index) => (
         <Button 
           key={index}
           onClick={action.onClick}
-          variant="outline"
-          className="h-20 md:h-24 flex flex-col items-center justify-center gap-2 hover:bg-primary hover:text-primary-foreground transition-all border-2 shadow-sm hover:shadow-md active:scale-95"
+          variant={action.primary ? "default" : "outline"}
+          className={`h-20 flex flex-col items-center justify-center gap-2 transition-all shadow-sm active:scale-95 ${
+            action.primary 
+              ? 'bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 text-white' 
+              : 'border-2 hover:border-primary/50'
+          }`}
         >
-          <action.icon className="h-5 w-5 md:h-6 md:w-6" />
-          <span className="text-xs md:text-sm font-medium">{action.label}</span>
+          <action.icon className="h-5 w-5" />
+          <span className="text-xs font-medium">{action.label}</span>
         </Button>
       ))}
     </div>
   );
-}
+};
+
+export default MobileQuickActions;

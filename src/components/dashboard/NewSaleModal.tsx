@@ -31,11 +31,11 @@ export default function NewSaleModal({
   setShowNewSaleModal
 }: NewSaleModalProps) {
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-      <Card className="w-full max-w-md shadow-2xl p-6">
-        <div className="flex justify-between items-center mb-6">
-          <h3 className="text-xl font-semibold text-foreground">Nova Venda</h3>
-          <button onClick={() => setShowNewSaleModal(false)} className="p-2 rounded-xl hover:bg-secondary/50">
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50 overflow-y-auto">
+      <Card className="w-full max-w-md shadow-2xl p-4 md:p-6 my-8">
+        <div className="flex justify-between items-center mb-4 md:mb-6">
+          <h3 className="text-lg md:text-xl font-semibold text-foreground">Nova Venda</h3>
+          <button onClick={() => setShowNewSaleModal(false)} className="p-2 rounded-xl hover:bg-secondary/50 active:scale-95 transition-transform">
             <X className="w-5 h-5 text-muted-foreground" />
           </button>
         </div>
