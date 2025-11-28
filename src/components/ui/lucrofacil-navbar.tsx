@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { DollarSign } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const AnimatedNavLink = ({ href, children }: { href: string; children: React.ReactNode }) => {
   const defaultTextColor = 'text-gray-300';
@@ -21,7 +21,6 @@ export function LucroFacilNavbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [headerShapeClass, setHeaderShapeClass] = useState('rounded-full');
   const shapeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const navigate = useNavigate();
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -64,12 +63,12 @@ export function LucroFacilNavbar() {
   ];
 
   const loginButtonElement = (
-    <button 
-      onClick={() => navigate('/auth')}
-      className="px-4 py-2 sm:px-3 text-xs sm:text-sm border border-[#333] bg-[rgba(31,31,31,0.62)] text-gray-300 rounded-full hover:border-white/50 hover:text-white transition-colors duration-200 w-full sm:w-auto"
+    <Link 
+      to="/auth"
+      className="px-4 py-2 sm:px-3 text-xs sm:text-sm border border-[#333] bg-[rgba(31,31,31,0.62)] text-gray-300 rounded-full hover:border-white/50 hover:text-white transition-colors duration-200 w-full sm:w-auto text-center inline-block"
     >
       Entrar
-    </button>
+    </Link>
   );
 
   const signupButtonElement = (
@@ -80,12 +79,12 @@ export function LucroFacilNavbar() {
                       opacity-40 filter blur-lg pointer-events-none
                       transition-all duration-300 ease-out
                       group-hover:opacity-60 group-hover:blur-xl group-hover:-m-3"></div>
-      <button 
-        onClick={() => navigate('/auth')}
-        className="relative z-10 px-4 py-2 sm:px-3 text-xs sm:text-sm font-semibold text-white bg-gradient-to-br from-[#10B981] to-[#059669] rounded-full hover:from-[#059669] hover:to-[#047857] transition-all duration-200 w-full sm:w-auto"
+      <Link 
+        to="/auth"
+        className="relative z-10 px-4 py-2 sm:px-3 text-xs sm:text-sm font-semibold text-white bg-gradient-to-br from-[#10B981] to-[#059669] rounded-full hover:from-[#059669] hover:to-[#047857] transition-all duration-200 w-full sm:w-auto inline-block text-center"
       >
         Começar Grátis
-      </button>
+      </Link>
     </div>
   );
 
