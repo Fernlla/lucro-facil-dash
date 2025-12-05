@@ -8,10 +8,10 @@ const AnimatedNavLink = ({ href, children }: { href: string; children: React.Rea
   const textSizeClass = 'text-sm';
 
   return (
-    <a href={href} className={`group relative inline-block overflow-hidden h-5 flex items-center ${textSizeClass}`}>
-      <div className="flex flex-col transition-transform duration-400 ease-out transform group-hover:-translate-y-1/2">
-        <span className={defaultTextColor}>{children}</span>
-        <span className={hoverTextColor}>{children}</span>
+    <a href={href} className={`group relative inline-block overflow-hidden flex items-center ${textSizeClass}`}>
+      <div className="flex flex-col transition-transform duration-400 ease-out transform group-hover:-translate-y-full h-[1.25rem]">
+        <span className={`${defaultTextColor} h-[1.25rem] flex items-center`}>{children}</span>
+        <span className={`${hoverTextColor} h-[1.25rem] flex items-center`}>{children}</span>
       </div>
     </a>
   );

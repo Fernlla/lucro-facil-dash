@@ -42,6 +42,51 @@ Example: `20251204000001_create_users_table.sql`
 - Preserves original timestamps
 - Verification logging
 
+### 20251204000003_set_rls_policies.sql
+**Purpose**: Enhanced Row Level Security policies for user data protection
+
+**Features**:
+- Stricter RLS policies (SELECT/UPDATE only for own records)
+- Blocks direct INSERT/DELETE from clients
+- Service role maintains full access
+- Email changes blocked via WITH CHECK
+- FORCE ROW LEVEL SECURITY enabled
+- Safe helper function: `update_user_profile()`
+
+**Policies**:
+- `users_select_own` - Users can SELECT only `id = auth.uid()`
+- `users_update_own` - Users can UPDATE only their own record (email blocked)
+- `service_role_full_access` - Service role has ALL permissions
+- No INSERT policy - Users created only via auth trigger
+- No DELETE policy - Users deleted only via CASCADE from auth.users
+
+**Helper Function**:
+```sql
+update_user_profile(new_full_name TEXT, new_avatar_url TEXT)
+```
+Safe way for users to update their profile (full_name, avatar_url only).
+
+### 20251204000004_optimize_auth_trigger.sql
+**Purpose**: Optimize auth sync trigger to fire ONLY on INSERT (not UPDATE)
+
+**Features**:
+- Trigger changed from `AFTER INSERT OR UPDATE` → `AFTER INSERT`
+- Prevents unnecessary executions on auth.users UPDATE
+- Adds `sync_auth_metadata()` function for manual profile sync
+- Email normalization (LOWER)
+- OAuth metadata extraction (name/picture fallbacks)
+
+**Why INSERT only?**
+- User creation happens once (INSERT)
+- Profile updates should use `update_user_profile()` or `sync_auth_metadata()`
+- Avoids infinite loops and unnecessary processing
+
+**Manual Sync Function**:
+```sql
+sync_auth_metadata() -- Syncs auth metadata to public.users on-demand
+```
+Called by users after OAuth re-authentication to refresh profile data.
+
 ## Running Migrations
 
 ### Local Development
@@ -91,6 +136,49 @@ SELECT * FROM public.users WHERE email = 'test@example.com'; -- Should be empty
 -- Run the same migration twice - should not error
 \i 20251204000001_create_users_table.sql
 \i 20251204000001_create_users_table.sql
+```
+
+### Test RLS Policies
+```bash
+# Run comprehensive RLS tests
+psql -f supabase/migrations/test_rls_policies.sql
+```
+
+Or test manually:
+```sql
+-- Verify policies exist
+SELECT policy_name, policy_cmd, policy_roles::text[]
+FROM pg_policies 
+WHERE schemaname = 'public' AND tablename = 'users';
+
+-- Test as authenticated user
+SET LOCAL ROLE authenticated;
+SET LOCAL "request.jwt.claims" TO '{"sub": "your-user-uuid"}';
+SELECT * FROM public.users; -- Should only return your record
+RESET ROLE;
+```
+
+### Test Auth Trigger
+```bash
+# Run auth sync trigger tests
+psql -f supabase/migrations/test_auth_trigger.sql
+```
+
+Key tests:
+```sql
+-- Verify trigger fires ONLY on INSERT
+SELECT event_manipulation 
+FROM information_schema.triggers 
+WHERE trigger_name = 'on_auth_user_created';
+-- Expected: 'INSERT' (NOT 'INSERT, UPDATE')
+
+-- Test email normalization
+INSERT INTO auth.users (email, ...) VALUES ('TEST@EXAMPLE.COM', ...);
+SELECT email FROM public.users WHERE id = ...; 
+-- Expected: 'test@example.com'
+
+-- Test manual sync
+SELECT public.sync_auth_metadata(); -- Updates profile from auth metadata
 ```
 
 ## Future Migrations

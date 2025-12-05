@@ -25,12 +25,12 @@ const pricingTiers: PricingTier[] = [
   {
     name: "Starter",
     price: {
-      monthly: 19.9,
+      monthly: 39.9,
       yearly: 191.04,
     },
     description: "Ideal para começar",
     features: [
-      "Até 100 produtos",
+      "Até 10 produtos",
       "Dashboard básico",
       "Suporte por email",
       "1 usuário",
@@ -41,7 +41,7 @@ const pricingTiers: PricingTier[] = [
   {
     name: "Profissional",
     price: {
-      monthly: 39.9,
+      monthly: 57.9,
       yearly: 382.08,
     },
     description: "Para negócios em crescimento",
@@ -60,7 +60,7 @@ const pricingTiers: PricingTier[] = [
   {
     name: "Enterprise",
     price: {
-      monthly: 89.9,
+      monthly: 69.9,
       yearly: 862.08,
     },
     description: "Para grandes empresas",
