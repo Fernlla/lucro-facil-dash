@@ -72,11 +72,11 @@ export const AnimatedSidebar = ({
 };
 
 export const AnimatedSidebarBody = (props: React.ComponentProps<typeof motion.div>) => {
-  const { className, children } = props;
+  const { className, children, ...rest } = props;
   return (
     <>
-      <DesktopSidebar {...props} />
-      <MobileSidebar className={className as string}>{children}</MobileSidebar>
+      <DesktopSidebar className={className} {...rest}>{children}</DesktopSidebar>
+      <MobileSidebar className={className as string}>{children as React.ReactNode}</MobileSidebar>
     </>
   );
 };
