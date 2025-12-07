@@ -28,7 +28,7 @@ export default function DashboardOverview({
   setCurrentPage
 }: DashboardOverviewProps) {
   return (
-    <div className="space-y-4 md:space-y-6">
+    <div className="space-y-3 md:space-y-4">
       <MetricsCards
         totalRevenue={totalRevenue}
         totalCosts={totalCosts}

@@ -9,12 +9,14 @@ interface ChartsSectionProps {
 
 export default function ChartsSection({ chartData, productsData, isMobile }: ChartsSectionProps) {
   return (
-    <div className="grid gap-4 md:gap-6 lg:grid-cols-2">
+    <div className="grid gap-3 md:gap-4 lg:grid-cols-2">
       <Card className="border-2 shadow-md overflow-hidden">
-        <div className="p-4 md:p-6">
-          <div className="mb-4">
-            <h3 className="text-base md:text-lg font-semibold">Faturamento e Lucro (7 dias)</h3>
-            <p className="text-xs md:text-sm text-muted-foreground mt-1">Evolução diária do seu negócio</p>
+        <div className="p-3 md:p-4">
+          <div className="mb-3">
+            <h3 className="text-sm md:text-base font-semibold flex items-center gap-1.5">
+              📈 Faturamento e Lucro (7 dias)
+            </h3>
+            <p className="text-xs text-muted-foreground mt-0.5">Evolução diária</p>
           </div>
           
           <ResponsiveContainer width="100%" height={isMobile ? 200 : 280}>

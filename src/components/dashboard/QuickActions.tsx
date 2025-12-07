@@ -33,13 +33,13 @@ export default function QuickActions({ setShowNewSaleModal, setCurrentPage }: Qu
   ];
 
   return (
-    <div className="grid grid-cols-2 gap-3 md:gap-4 lg:grid-cols-4">
+    <div className="grid grid-cols-2 gap-2.5 md:gap-3 lg:grid-cols-4">
       {actions.map((action, index) => (
         <Button 
           key={index}
           onClick={action.onClick}
           variant="outline"
-          className="h-20 md:h-24 flex flex-col items-center justify-center gap-2 hover:bg-primary hover:text-primary-foreground transition-all border-2 shadow-sm hover:shadow-md active:scale-95"
+          className="h-18 md:h-20 flex flex-col items-center justify-center gap-1.5 hover:bg-primary hover:text-primary-foreground transition-all border-2 shadow-sm hover:shadow-md active:scale-95"
         >
           <action.icon className="h-5 w-5 md:h-6 md:w-6" />
           <span className="text-xs md:text-sm font-medium">{action.label}</span>

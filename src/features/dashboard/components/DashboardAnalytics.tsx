@@ -31,7 +31,7 @@ export default function DashboardAnalytics({
   isMobile
 }: DashboardAnalyticsProps) {
   return (
-    <div className="space-y-4 md:space-y-6">
+    <div className="space-y-3 md:space-y-4">
       {/* Gráficos principais: Faturamento/Lucro + Top Produtos */}
       <ChartsSection
         chartData={chartData}
@@ -40,7 +40,7 @@ export default function DashboardAnalytics({
       />
 
       {/* Gráficos de análise: Lucro Diário + Horários de Pico */}
-      <div className="grid gap-4 md:gap-6 lg:grid-cols-2">
+      <div className="grid gap-3 md:gap-4 lg:grid-cols-2">
         <DailyProfitChart
           data={dailyProfitData}
           isMobile={isMobile}

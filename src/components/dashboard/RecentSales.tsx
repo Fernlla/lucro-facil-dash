@@ -21,9 +21,9 @@ interface RecentSalesProps {
 export default function RecentSales({ sales, setCurrentPage }: RecentSalesProps) {
   return (
     <Card className="border-2 shadow-md">
-      <div className="p-4 md:p-6">
-        <div className="flex items-center justify-between mb-4 md:mb-6">
-          <h3 className="text-base md:text-lg font-semibold">Vendas Recentes</h3>
+      <div className="p-3 md:p-4">
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="text-sm md:text-base font-semibold flex items-center gap-1.5">🛍️ Vendas Recentes</h3>
           <Button 
             variant="ghost" 
             size="sm" 
@@ -34,9 +34,9 @@ export default function RecentSales({ sales, setCurrentPage }: RecentSalesProps)
           </Button>
         </div>
         
-        <div className="space-y-3">
+        <div className="space-y-2">
           {sales.slice(0, 5).map((sale) => (
-            <div key={sale.id} className="flex items-center justify-between p-3 md:p-4 rounded-lg border border-border hover:border-primary/50 hover:bg-muted/50 transition-all shadow-sm active:scale-[0.98]">
+            <div key={sale.id} className="flex items-center justify-between p-2.5 md:p-3 rounded-lg border border-border hover:border-primary/50 hover:bg-muted/50 transition-all shadow-sm active:scale-[0.98]">
               <div className="flex items-center gap-3 flex-1 min-w-0">
                 <div className="flex h-9 w-9 md:h-10 md:w-10 items-center justify-center rounded-full bg-primary/10 flex-shrink-0">
                   <ShoppingBag className="h-4 w-4 md:h-5 md:w-5 text-primary" />

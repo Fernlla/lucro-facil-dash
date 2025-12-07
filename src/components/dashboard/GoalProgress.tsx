@@ -9,9 +9,9 @@ interface GoalProgressProps {
 export default function GoalProgress({ dailyProgress, totalProfit, dailyGoal }: GoalProgressProps) {
   return (
     <Card className="border-2 shadow-md">
-      <div className="p-4 md:p-6">
-        <div className="flex items-center justify-between mb-3 md:mb-4 gap-2">
-          <h3 className="text-sm md:text-base lg:text-lg font-semibold">Progresso da Meta Diária</h3>
+      <div className="p-3 md:p-4">
+        <div className="flex items-center justify-between mb-2 md:mb-3 gap-2">
+          <h3 className="text-sm md:text-base font-semibold flex items-center gap-1.5">🎯 Meta Diária</h3>
           {dailyProgress >= 100 && (
             <span className="bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 text-xs px-2 py-1 rounded-full font-medium whitespace-nowrap">
               🎉 Meta batida!

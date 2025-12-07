@@ -20,11 +20,13 @@ export default function DailyProfitChart({ data, isMobile }: DailyProfitChartPro
 
   return (
     <Card className="border-2 shadow-md overflow-hidden">
-      <div className="p-4 md:p-6">
-        <div className="mb-4 flex items-start justify-between">
+      <div className="p-3 md:p-4">
+        <div className="mb-3 flex items-start justify-between">
           <div>
-            <h3 className="text-base md:text-lg font-semibold"> Lucro Diário</h3>
-            <p className="text-xs md:text-sm text-muted-foreground mt-1">
+            <h3 className="text-sm md:text-base font-semibold flex items-center gap-1.5">
+              💰 Lucro Diário
+            </h3>
+            <p className="text-xs text-muted-foreground mt-0.5">
               Quanto sobrou no bolso cada dia
             </p>
           </div>
@@ -40,20 +42,20 @@ export default function DailyProfitChart({ data, isMobile }: DailyProfitChartPro
           </div>
         </div>
 
-        <div className="mb-3 flex items-center gap-4 text-xs md:text-sm">
+        <div className="mb-2 flex items-center gap-3 text-xs">
           <div>
             <span className="text-muted-foreground">Média:</span>
-            <span className="ml-2 font-semibold">R$ {avgProfit.toFixed(2)}</span>
+            <span className="ml-1.5 font-semibold">R$ {avgProfit.toFixed(2)}</span>
           </div>
           <div>
             <span className="text-muted-foreground">Total:</span>
-            <span className="ml-2 font-semibold text-green-600">
+            <span className="ml-1.5 font-semibold text-green-600">
               R$ {data.reduce((acc, item) => acc + item.profit, 0).toFixed(2)}
             </span>
           </div>
         </div>
         
-        <ResponsiveContainer width="100%" height={isMobile ? 220 : 300}>
+        <ResponsiveContainer width="100%" height={isMobile ? 200 : 280}>
           <BarChart data={data}>
             <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
             <XAxis 
@@ -89,9 +91,9 @@ export default function DailyProfitChart({ data, isMobile }: DailyProfitChartPro
           </BarChart>
         </ResponsiveContainer>
 
-        <div className="mt-3 pt-3 border-t border-border">
+        <div className="mt-2 pt-2 border-t border-border">
           <p className="text-xs text-muted-foreground text-center">
-            🟢 Verde = Acima da média • 🟠 Laranja = Abaixo da média
+            🟢 Acima da média • 🟠 Abaixo da média
           </p>
         </div>
       </div>

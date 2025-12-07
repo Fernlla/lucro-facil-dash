@@ -56,10 +56,10 @@ export default function MetricsCards({
   return (
     <>
       {/* Mobile: Scroll horizontal */}
-      <div className="flex md:hidden gap-3 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide -mx-3 px-3">
+      <div className="flex md:hidden gap-2.5 overflow-x-auto pb-3 snap-x snap-mandatory scrollbar-hide -mx-3 px-3">
         {metrics.map((metric, index) => (
-          <Card key={index} className="relative overflow-hidden border-2 shadow-md min-w-[280px] snap-center">
-            <div className="flex h-28 flex-col justify-between p-5">
+          <Card key={index} className="relative overflow-hidden border-2 shadow-md min-w-[260px] snap-center">
+            <div className="flex h-24 flex-col justify-between p-4">
               <div className="flex items-center justify-between space-y-0 pb-2">
                 <p className="text-sm font-medium text-muted-foreground">{metric.label}</p>
                 <div className="h-4 w-4 text-muted-foreground">
@@ -85,10 +85,10 @@ export default function MetricsCards({
       </div>
 
       {/* Desktop: Grid normal */}
-      <div className="hidden md:grid md:gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="hidden md:grid md:gap-3 md:grid-cols-2 lg:grid-cols-4">
         {metrics.map((metric, index) => (
           <Card key={index} className="relative overflow-hidden border-2 shadow-md hover:shadow-lg transition-shadow">
-            <div className="flex h-32 flex-col justify-between p-6">
+            <div className="flex h-28 flex-col justify-between p-4">
               <div className="flex items-center justify-between space-y-0 pb-2">
                 <p className="text-sm font-medium text-muted-foreground">{metric.label}</p>
                 <div className="h-4 w-4 text-muted-foreground">

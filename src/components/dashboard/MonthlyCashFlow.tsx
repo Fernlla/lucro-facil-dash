@@ -22,15 +22,17 @@ export default function MonthlyCashFlow({ data, isMobile }: MonthlyCashFlowProps
 
   return (
     <Card className="border-2 shadow-md overflow-hidden">
-      <div className="p-4 md:p-6">
-        <div className="mb-4">
-          <h3 className="text-base md:text-lg font-semibold"> Fluxo de Caixa Mensal</h3>
-          <p className="text-xs md:text-sm text-muted-foreground mt-1">
+      <div className="p-3 md:p-4">
+        <div className="mb-3">
+          <h3 className="text-sm md:text-base font-semibold flex items-center gap-1.5">
+            📊 Fluxo de Caixa Mensal
+          </h3>
+          <p className="text-xs text-muted-foreground mt-0.5">
           </p>
         </div>
 
-        <div className="grid grid-cols-3 gap-2 md:gap-4 mb-4">
-          <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-3 border border-green-200 dark:border-green-800">
+        <div className="grid grid-cols-3 gap-2 mb-3">
+          <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-2 border border-green-200 dark:border-green-800">
             <div className="flex items-center gap-2 mb-1">
               <ArrowUpCircle className="h-4 w-4 text-green-600" />
               <span className="text-xs font-medium text-green-700 dark:text-green-400">Entrada</span>
@@ -71,7 +73,7 @@ export default function MonthlyCashFlow({ data, isMobile }: MonthlyCashFlowProps
           </div>
         </div>
         
-        <ResponsiveContainer width="100%" height={isMobile ? 220 : 300}>
+        <ResponsiveContainer width="100%" height={isMobile ? 200 : 280}>
           <AreaChart data={data}>
             <defs>
               <linearGradient id="colorEntrada" x1="0" y1="0" x2="0" y2="1">

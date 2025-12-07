@@ -37,26 +37,25 @@ export default function PeakHoursChart({ data, isMobile }: PeakHoursChartProps) 
 
   return (
     <Card className="border-2 shadow-md overflow-hidden">
-      <div className="p-4 md:p-6">
-        <div className="mb-4 flex items-start justify-between">
+      <div className="p-3 md:p-4">
+        <div className="mb-3 flex items-start justify-between">
           <div>
-            <h3 className="text-base md:text-lg font-semibold flex items-center gap-2">
-              <Clock className="h-5 w-5 text-primary" />
-              Horários de Pico
+            <h3 className="text-sm md:text-base font-semibold flex items-center gap-1.5">
+              ⏰ Horários de Pico
             </h3>
-            <p className="text-xs md:text-sm text-muted-foreground mt-1">
-              Quando vendem mais? • Atualização em tempo real
+            <p className="text-xs text-muted-foreground mt-0.5">
+              Quando vendem mais? • Real-time
             </p>
           </div>
-          <div className="bg-primary/10 rounded-lg px-3 py-1.5 border border-primary/20">
+          <div className="bg-primary/10 rounded-lg px-2 py-1 border border-primary/20">
             <p className="text-xs font-medium text-primary">
-              Agora: {currentTime.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
+              {currentTime.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
             </p>
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-3 mb-4">
-          <div className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 rounded-lg p-3 border border-green-200 dark:border-green-800">
+        <div className="grid grid-cols-2 gap-2 mb-3">
+          <div className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 rounded-lg p-2 border border-green-200 dark:border-green-800">
             <div className="flex items-center gap-2 mb-1">
               <TrendingUp className="h-4 w-4 text-green-600" />
               <span className="text-xs font-medium text-green-700 dark:text-green-400">Melhor Horário</span>
@@ -83,7 +82,7 @@ export default function PeakHoursChart({ data, isMobile }: PeakHoursChartProps) 
           </div>
         </div>
         
-        <ResponsiveContainer width="100%" height={isMobile ? 220 : 300}>
+        <ResponsiveContainer width="100%" height={isMobile ? 200 : 280}>
           <BarChart data={data}>
             <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
             <XAxis 

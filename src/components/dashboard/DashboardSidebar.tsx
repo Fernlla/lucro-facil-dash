@@ -24,11 +24,11 @@ export default function DashboardSidebar({
   setShowMobileMenu
 }: DashboardSidebarProps) {
   return (
-    <AnimatedSidebar animate={true}>
-      <AnimatedSidebarBody className="justify-between gap-6">
+    <AnimatedSidebar animate={false}>
+      <AnimatedSidebarBody className="justify-between gap-5">
         <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
           {/* Logo */}
-          <div className="flex items-center space-x-2 mb-6">
+          <div className="flex items-center space-x-2 mb-5">
             <div className="bg-gradient-to-r from-primary to-accent w-7 h-7 rounded-lg flex items-center justify-center shadow-sm">
               <DollarSign className="w-4 h-4 text-white" />
             </div>
@@ -42,7 +42,7 @@ export default function DashboardSidebar({
           </div>
           
           {/* Menu items principais */}
-          <div className="flex flex-col gap-1.5">
+          <div className="flex flex-col gap-1">
             {[
               { id: 'dashboard', label: 'Dashboard', icon: <Home className="h-5 w-5 text-foreground flex-shrink-0" />, action: () => setCurrentPage('dashboard') },
               { id: 'products', label: 'Produtos', icon: <Package className="h-5 w-5 text-foreground flex-shrink-0" />, action: () => setCurrentPage('products') },
@@ -67,8 +67,8 @@ export default function DashboardSidebar({
           </div>
           
           {/* Ferramentas */}
-          <div className="mt-3 pt-3 border-t border-border">
-            <div className="flex flex-col gap-1.5">
+          <div className="mt-4 pt-3 border-t border-border">
+            <div className="flex flex-col gap-1">
               <AnimatedSidebarLink
                 link={{
                   label: 'Assistente IA',
@@ -123,8 +123,8 @@ export default function DashboardSidebar({
         </div>
         
         {/* Parte inferior: Perfil e Sair */}
-        <div className="border-t border-border pt-2">
-          <div className="flex flex-col gap-1.5">
+        <div className="border-t border-border pt-3">
+          <div className="flex flex-col gap-1">
             <AnimatedSidebarLink
               link={{
                 label: user?.name || 'Perfil',

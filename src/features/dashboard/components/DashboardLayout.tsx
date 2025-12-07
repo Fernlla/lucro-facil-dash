@@ -89,7 +89,7 @@ export default function DashboardLayout({
   };
 
   return (
-    <div className="min-h-screen bg-background transition-colors duration-200">
+    <div className="min-h-screen transition-colors duration-200">
       <div className="flex flex-1">
         {/* Sidebar Desktop */}
         <div className="hidden md:block">
@@ -105,11 +105,11 @@ export default function DashboardLayout({
         </div>
 
         {/* Main Content */}
-        <main className="flex flex-1 flex-col bg-muted/30 w-full">
+        <main className="flex flex-1 flex-col w-full">
           <DashboardHeader setShowNewSaleModal={setShowNewSaleModal} />
           
-          <div className="flex-1 p-4 md:p-6 lg:p-8 pb-24 md:pb-6">
-            <div className="space-y-6 md:space-y-8 max-w-7xl mx-auto">
+          <div className="flex-1 p-3 md:p-4 lg:p-6 pb-20 md:pb-4 bg-muted/30">
+            <div className="space-y-4 md:space-y-5 max-w-7xl mx-auto">
               
               {/* Seção 1: Overview (Métricas + Meta + Ações) */}
               <DashboardOverview

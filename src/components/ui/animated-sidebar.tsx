@@ -90,14 +90,14 @@ export const DesktopSidebar = ({
   return (
     <motion.div
       className={cn(
-        "h-screen px-3 py-4 hidden md:flex md:flex-col bg-card dark:bg-neutral-800 w-[220px] flex-shrink-0 border-r-2 border-border shadow-sm sticky top-0",
+        "h-screen px-3 py-4 hidden md:flex md:flex-col bg-card dark:bg-neutral-800 w-[200px] flex-shrink-0 border-r border-border sticky top-0",
         className
       )}
       animate={{
-        width: animate ? (open ? "220px" : "60px") : "220px",
+        width: animate ? (open ? "200px" : "60px") : "200px",
       }}
-      onMouseEnter={() => setOpen(true)}
-      onMouseLeave={() => setOpen(false)}
+      onMouseEnter={() => animate && setOpen(true)}
+      onMouseLeave={() => animate && setOpen(false)}
       {...props}
     >
       {children}
@@ -115,7 +115,7 @@ export const MobileSidebar = ({
     <>
       <div
         className={cn(
-          "h-10 px-4 py-4 flex flex-row md:hidden items-center justify-between bg-card dark:bg-neutral-800 w-full"
+          "h-12 px-3 py-2 flex flex-row md:hidden items-center justify-between bg-card dark:bg-neutral-800 w-full border-b border-border"
         )}
         {...props}
       >
@@ -192,7 +192,7 @@ export const AnimatedSidebarLink = ({
       <button
         onClick={handleClick}
         className={cn(
-          "flex items-center justify-start gap-2.5 group/sidebar py-1.5 w-full text-left hover:bg-accent hover:text-accent-foreground rounded-lg px-2 transition-colors",
+          "flex items-center justify-start gap-2 group/sidebar py-2 w-full text-left hover:bg-accent hover:text-accent-foreground rounded-lg px-2.5 transition-colors",
           className
         )}
         {...props}
@@ -206,7 +206,7 @@ export const AnimatedSidebarLink = ({
     <a
       href={link.href}
       className={cn(
-        "flex items-center justify-start gap-2.5 group/sidebar py-1.5 hover:bg-accent hover:text-accent-foreground rounded-lg px-2 transition-colors",
+        "flex items-center justify-start gap-2 group/sidebar py-2 hover:bg-accent hover:text-accent-foreground rounded-lg px-2.5 transition-colors",
         className
       )}
       {...props}
