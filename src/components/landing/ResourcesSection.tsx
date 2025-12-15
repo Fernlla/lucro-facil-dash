@@ -17,6 +17,8 @@ interface Feature {
   gradient: string;
   iconColor: string;
   bgColor: string;
+  image?: string;
+  imageAlt?: string;
 }
 
 const features: Feature[] = [
@@ -26,7 +28,9 @@ const features: Feature[] = [
     description: 'Veja exatamente quanto você está lucrando com cada produto, venda e período.',
     gradient: 'from-background to-primary/5',
     iconColor: 'text-primary',
-    bgColor: 'bg-primary/10'
+    bgColor: 'bg-primary/10',
+    image: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=400&h=300&fit=crop',
+    imageAlt: 'Dashboard com métricas financeiras em tempo real'
   },
   {
     icon: 'BarChart3',
@@ -34,7 +38,9 @@ const features: Feature[] = [
     description: 'Dashboards completos com métricas que realmente importam para o seu negócio.',
     gradient: 'from-background to-accent/5',
     iconColor: 'text-accent',
-    bgColor: 'bg-accent/10'
+    bgColor: 'bg-accent/10',
+    image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&h=300&fit=crop',
+    imageAlt: 'Gráficos e relatórios de análise de negócio'
   },
   {
     icon: 'Package',
@@ -42,7 +48,9 @@ const features: Feature[] = [
     description: 'Cadastre produtos, defina custos e preços, acompanhe margem de lucro.',
     gradient: 'from-background to-green-500/5',
     iconColor: 'text-green-600',
-    bgColor: 'bg-green-500/10'
+    bgColor: 'bg-green-500/10',
+    image: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=400&h=300&fit=crop',
+    imageAlt: 'Organização de produtos e estoque'
   },
   {
     icon: 'TrendingUp',
@@ -50,7 +58,9 @@ const features: Feature[] = [
     description: 'Identifique seus produtos mais rentáveis e otimize sua estratégia.',
     gradient: 'from-background to-blue-500/5',
     iconColor: 'text-blue-600',
-    bgColor: 'bg-blue-500/10'
+    bgColor: 'bg-blue-500/10',
+    image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=300&fit=crop',
+    imageAlt: 'Análise de crescimento de vendas'
   },
   {
     icon: 'Brain',
@@ -58,7 +68,9 @@ const features: Feature[] = [
     description: 'Inteligência artificial para responder dúvidas e dar insights sobre seu negócio.',
     gradient: 'from-background to-purple-500/5',
     iconColor: 'text-purple-600',
-    bgColor: 'bg-purple-500/10'
+    bgColor: 'bg-purple-500/10',
+    image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400&h=300&fit=crop',
+    imageAlt: 'Inteligência artificial e assistente virtual'
   },
   {
     icon: 'Target',
@@ -66,7 +78,9 @@ const features: Feature[] = [
     description: 'Defina metas diárias e mensais, acompanhe seu progresso em tempo real.',
     gradient: 'from-background to-orange-500/5',
     iconColor: 'text-orange-600',
-    bgColor: 'bg-orange-500/10'
+    bgColor: 'bg-orange-500/10',
+    image: 'https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?w=400&h=300&fit=crop',
+    imageAlt: 'Planejamento e acompanhamento de metas'
   }
 ];
 
@@ -87,17 +101,33 @@ const ResourcesSection = () => {
             return (
               <Card 
                 key={index}
-                className={`p-8 text-center group hover:shadow-lg transition-all duration-300 border-border/50 hover:border-primary/30 bg-gradient-to-br ${feature.gradient}`}
+                className={`overflow-hidden group hover:shadow-xl transition-all duration-300 border-border/50 hover:border-primary/30 bg-gradient-to-br ${feature.gradient}`}
               >
-                <div className={`w-16 h-16 ${feature.bgColor} rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300`}>
-                  <IconComponent className={`w-8 h-8 ${feature.iconColor}`} />
+                {/* Imagem ilustrativa */}
+                {feature.image && (
+                  <div className="relative h-48 overflow-hidden">
+                    <img 
+                      src={feature.image} 
+                      alt={feature.imageAlt || feature.title}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      loading="lazy"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-background/90 to-transparent" />
+                    <div className={`absolute bottom-4 left-4 w-12 h-12 ${feature.bgColor} rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg`}>
+                      <IconComponent className={`w-6 h-6 ${feature.iconColor}`} />
+                    </div>
+                  </div>
+                )}
+                
+                {/* Conteúdo */}
+                <div className="p-6">
+                  <h3 className="text-lg font-semibold mb-3 text-foreground">
+                    {feature.title}
+                  </h3>
+                  <p className="text-muted-foreground text-sm leading-relaxed">
+                    {feature.description}
+                  </p>
                 </div>
-                <h3 className="text-lg font-semibold mb-3 text-foreground">
-                  {feature.title}
-                </h3>
-                <p className="text-muted-foreground text-sm">
-                  {feature.description}
-                </p>
               </Card>
             );
           })}

@@ -1,4 +1,7 @@
 import { useState, useEffect } from 'react';
+import { HelmetProvider } from 'react-helmet-async';
+import SEO from '@/components/SEO';
+import PerformanceOptimizer from '@/components/PerformanceOptimizer';
 import { LucroFacilNavbar } from '@/components/ui/lucrofacil-navbar';
 import { Pricing } from '@/components/ui/pricing';
 import HeroSection from '@/components/landing/HeroSection';
@@ -25,8 +28,11 @@ const Landing = () => {
   const landingId = 'lucrofacil-landing-v1.0';
 
   return (
-    <div id={landingId} className={`min-h-screen ${isDark ? 'bg-slate-900' : 'bg-white'} transition-colors duration-200`}>
-      <LucroFacilNavbar />
+    <HelmetProvider>
+      <SEO />
+      <PerformanceOptimizer />
+      <div id={landingId} className={`min-h-screen ${isDark ? 'bg-slate-900' : 'bg-white'} transition-colors duration-200`}>
+        <LucroFacilNavbar />
       <HeroSection />
       <ResourcesSection />
       <VideoDemo />
@@ -36,9 +42,10 @@ const Landing = () => {
       <TestimonialsSection />
       <BlogPreview />
       <HelpSection />
-      <CTASection />
-      <LandingFooter />
-    </div>
+        <CTASection />
+        <LandingFooter />
+      </div>
+    </HelmetProvider>
   );
 };
 

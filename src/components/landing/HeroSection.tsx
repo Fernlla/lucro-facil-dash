@@ -5,11 +5,16 @@ import { customerPhotos } from './landingData';
 
 const HeroSection = () => {
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-primary via-primary/95 to-accent pt-32 pb-20 lg:pt-40 lg:pb-32">
+    <section 
+      className="relative overflow-hidden bg-gradient-to-br from-primary via-primary/95 to-accent pt-32 pb-20 lg:pt-40 lg:pb-32"
+      aria-label="Hero Section - Apresentação principal"
+      itemScope 
+      itemType="https://schema.org/WPHeader"
+    >
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Left Column - Content */}
-          <div className="text-left space-y-8 z-10">
+          <article className="text-left space-y-8 z-10">
             <Badge 
               variant="outline" 
               className="mb-4 gap-2 bg-white/10 border-white/30 text-white hover:bg-white/20 transition-colors w-fit"
@@ -18,30 +23,41 @@ const HeroSection = () => {
               <span>Descubra o segredo dos empreendedores de sucesso</span>
             </Badge>
 
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight">
+            <h1 
+              className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight"
+              itemProp="headline"
+            >
               Gestão inteligente para vender mais e se preocupar menos,{' '}
               <span className="text-green-200">tem no LucroFácil!</span>
             </h1>
             
-            <p className="text-xl text-white/90 max-w-xl">
+            <p 
+              className="text-xl text-white/90 max-w-xl"
+              itemProp="description"
+            >
               Controle suas vendas, estoque e finanças em um só lugar. 
               Automatize processos e foque no crescimento do seu negócio.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex flex-col sm:flex-row gap-4" role="group" aria-label="Call to action buttons">
               <Button 
                 size="lg" 
                 className="bg-white text-primary hover:bg-white/90 text-lg px-8 py-6 shadow-xl h-auto font-semibold"
                 onClick={() => window.location.href = '/auth'}
+                aria-label="Começar a usar o LucroFácil gratuitamente"
+                itemProp="potentialAction"
+                itemScope
+                itemType="https://schema.org/Action"
               >
                 Começar gratuitamente
-                <ArrowRight className="ml-2 w-5 h-5" />
+                <ArrowRight className="ml-2 w-5 h-5" aria-hidden="true" />
               </Button>
               
               <Button 
                 size="lg" 
                 variant="outline" 
                 className="text-white border-2 border-white hover:bg-white/10 text-lg px-8 py-6 h-auto font-semibold"
+                aria-label="Entrar em contato com a equipe de vendas"
               >
                 Falar com vendas
               </Button>
@@ -61,10 +77,10 @@ const HeroSection = () => {
                 <span>Cancele quando quiser</span>
               </div>
             </div>
-          </div>
+          </article>
 
           {/* Right Column - Dashboard Preview */}
-          <div className="relative lg:block hidden">
+          <div className="relative lg:block hidden" role="img" aria-label="Preview do dashboard LucroFácil">
             <div className="bg-white rounded-2xl shadow-2xl overflow-hidden border-8 border-white/20 transform rotate-2 hover:rotate-0 transition-transform duration-500">
               <div className="bg-gradient-to-r from-primary to-accent p-3 flex items-center gap-2">
                 <div className="flex gap-1.5">
