@@ -17,6 +17,10 @@ export default {
         sans: ["Stack Sans Text", "sans-serif"],
       },
       colors: {
+        dashboardBg: {
+          light: '#f0f0f0ff',
+          dark: '#dfdfdfff',
+        },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
