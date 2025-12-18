@@ -1,9 +1,11 @@
-import DashboardHeader from '@/components/dashboard/DashboardHeader';
-import DashboardSidebar from '@/components/dashboard/DashboardSidebar';
-import MobileMenu from '@/components/dashboard/MobileMenu';
-import BottomNavigation from '@/components/dashboard/BottomNavigation';
-import NewSaleModal from '@/components/dashboard/NewSaleModal';
-import RecentSales from '@/components/dashboard/RecentSales';
+import CommercialHeader from '@/components/DashboardCommercial/CommercialHeader';
+import CommercialSidebar from '@/components/DashboardCommercial/CommercialSidebar';
+import RecentSalesList from '@/components/DashboardCommercial/RecentSalesList';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import DashboardOverview from './DashboardOverview';
 import DashboardAnalytics from './DashboardAnalytics';
 import { PageType, Product, Sale, NewSale } from '../types';
@@ -89,24 +91,18 @@ export default function DashboardLayout({
   };
 
   return (
-    <div className="min-h-screen transition-colors duration-200">
-      <div className="flex flex-1">
-        {/* Sidebar Desktop */}
-        <div className="hidden md:block">
-          <DashboardSidebar
-            user={user}
-            currentPage={currentPage}
-            setCurrentPage={setCurrentPage}
-            setActiveTab={setActiveTab}
-            activeTab={activeTab}
-            handleLogout={handleLogout}
-            setShowMobileMenu={setShowMobileMenu}
-          />
-        </div>
+    <div className="flex h-screen bg-dashboardBg-light dark:bg-dashboardBg-dark overflow-hidden">
+      {/* Sidebar */}
+      <CommercialSidebar
+        activeMenu={activeTab}
+        onMenuChange={setActiveTab}
+        notificationCount={0}
+        onPageChange={(page) => setCurrentPage(page as PageType)}
+      />
 
-        {/* Main Content */}
-        <main className="flex flex-1 flex-col w-full">
-          <DashboardHeader setShowNewSaleModal={setShowNewSaleModal} />
+      {/* Main Content */}
+      <div className="flex-1 ml-60 overflow-auto">
+        <CommercialHeader onNewSale={() => setShowNewSaleModal(true)} />
           
           <div className="flex-1 p-3 md:p-4 lg:p-6 pb-20 md:pb-4 bg-muted/30">
             <div className="space-y-4 md:space-y-5 max-w-7xl mx-auto">
@@ -134,41 +130,75 @@ export default function DashboardLayout({
               />
 
               {/* Seção 3: Vendas Recentes */}
-              <RecentSales
-                sales={sales}
-                setCurrentPage={setCurrentPage}
+              <RecentSalesList
+                sales={sales.slice(0, 7).map(s => ({
+                  ...s,
+                  productName: s.product
+                }))}
+                onViewAll={() => setCurrentPage('sales')}
               />
             </div>
           </div>
-        </main>
+        </div>
+
+        {/* Modal de Nova Venda */}
+        <Dialog open={showNewSaleModal} onOpenChange={setShowNewSaleModal}>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Nova Venda</DialogTitle>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+              <div className="grid gap-2">
+                <Label htmlFor="product">Produto</Label>
+                <Select 
+                  value={newSale.productId} 
+                  onValueChange={(value) => setNewSale({ ...newSale, productId: value })}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione um produto" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {products.map((product) => (
+                      <SelectItem key={product.id} value={product.id.toString()}>
+                        {product.name} - R$ {product.price.toFixed(2)}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="quantity">Quantidade</Label>
+                <Input
+                  id="quantity"
+                  type="number"
+                  min="1"
+                  value={newSale.quantity}
+                  onChange={(e) => setNewSale({ ...newSale, quantity: parseInt(e.target.value) || 1 })}
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="customPrice">Preço Customizado (opcional)</Label>
+                <Input
+                  id="customPrice"
+                  type="number"
+                  step="0.01"
+                  placeholder="Deixe vazio para usar preço padrão"
+                  value={newSale.customPrice}
+                  onChange={(e) => setNewSale({ ...newSale, customPrice: e.target.value })}
+                />
+              </div>
+            </div>
+            <div className="flex justify-end gap-3">
+              <Button variant="outline" onClick={() => setShowNewSaleModal(false)}>
+                Cancelar
+              </Button>
+              <Button onClick={handleAddSale}>
+                Registrar Venda
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
-
-      {/* Mobile Components */}
-      <MobileMenu
-        showMobileMenu={showMobileMenu}
-        setShowMobileMenu={setShowMobileMenu}
-        currentPage={currentPage}
-        setCurrentPage={setCurrentPage}
-        setActiveTab={setActiveTab}
-        activeTab={activeTab}
-      />
-
-      <BottomNavigation
-        currentPage={currentPage}
-        setCurrentPage={setCurrentPage}
-        setShowNewSaleModal={setShowNewSaleModal}
-      />
-
-      {/* Modals */}
-      {showNewSaleModal && (
-        <NewSaleModal
-          products={products}
-          newSale={newSale}
-          setNewSale={setNewSale}
-          addSale={handleAddSale}
-          setShowNewSaleModal={setShowNewSaleModal}
-        />
-      )}
     </div>
   );
 }
