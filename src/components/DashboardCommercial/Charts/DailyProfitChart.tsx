@@ -87,7 +87,7 @@ const DailyProfitChart = ({ sales, isMobile = false }: DailyProfitChartProps) =>
       {/* Gráfico */}
       <ResponsiveContainer width="100%" height={isMobile ? 250 : 300}>
         <BarChart data={chartDataWithColor} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#a3a3a3ff" />
+          <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
           <XAxis 
             dataKey="dia" 
             stroke="#6B7280"
