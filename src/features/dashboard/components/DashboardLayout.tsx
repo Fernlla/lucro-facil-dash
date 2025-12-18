@@ -104,40 +104,39 @@ export default function DashboardLayout({
       <div className="flex-1 ml-60 overflow-auto">
         <CommercialHeader onNewSale={() => setShowNewSaleModal(true)} />
           
-          <div className="flex-1 p-3 md:p-4 lg:p-6 pb-20 md:pb-4 bg-muted/30">
-            <div className="space-y-4 md:space-y-5 max-w-7xl mx-auto">
-              
-              {/* Seção 1: Overview (Métricas + Meta + Ações) */}
-              <DashboardOverview
-                totalRevenue={metrics.totalRevenue}
-                totalCosts={metrics.totalCosts}
-                totalProfit={metrics.totalProfit}
-                profitMargin={metrics.profitMargin}
-                dailyProgress={metrics.dailyProgress}
-                dailyGoal={dailyGoal}
-                setShowNewSaleModal={setShowNewSaleModal}
-                setCurrentPage={setCurrentPage}
-              />
+        <div className="p-3 md:p-4 lg:p-6 pb-20 md:pb-4">
+          <div className="space-y-4 md:space-y-5 max-w-7xl mx-auto">
+            
+            {/* Seção 1: Overview (Métricas + Meta + Ações) */}
+            <DashboardOverview
+              totalRevenue={metrics.totalRevenue}
+              totalCosts={metrics.totalCosts}
+              totalProfit={metrics.totalProfit}
+              profitMargin={metrics.profitMargin}
+              dailyProgress={metrics.dailyProgress}
+              dailyGoal={dailyGoal}
+              setShowNewSaleModal={setShowNewSaleModal}
+              setCurrentPage={setCurrentPage}
+            />
 
-              {/* Seção 2: Analytics (Todos os Gráficos) */}
-              <DashboardAnalytics
-                chartData={chartData}
-                productsData={productsData}
-                dailyProfitData={dailyProfitData}
-                cashFlowData={cashFlowData}
-                peakHoursData={peakHoursData}
-                isMobile={isMobile}
-              />
+            {/* Seção 2: Analytics (Todos os Gráficos) */}
+            <DashboardAnalytics
+              chartData={chartData}
+              productsData={productsData}
+              dailyProfitData={dailyProfitData}
+              cashFlowData={cashFlowData}
+              peakHoursData={peakHoursData}
+              isMobile={isMobile}
+            />
 
-              {/* Seção 3: Vendas Recentes */}
-              <RecentSalesList
-                sales={sales.slice(0, 7).map(s => ({
-                  ...s,
-                  productName: s.product
-                }))}
-                onViewAll={() => setCurrentPage('sales')}
-              />
-            </div>
+            {/* Seção 3: Vendas Recentes */}
+            <RecentSalesList
+              sales={sales.slice(0, 7).map(s => ({
+                ...s,
+                productName: s.product
+              }))}
+              onViewAll={() => setCurrentPage('sales')}
+            />
           </div>
         </div>
 
